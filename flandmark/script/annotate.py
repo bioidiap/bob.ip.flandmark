@@ -115,13 +115,16 @@ def main():
       output.write("%d %d %d %d %d " % ((k,) + bbox))
       lstr = " ".join("%d %d" % (round(p[0]), round(p[1])) for p in landmarks)
       output.write(lstr + "\n")
+      if args.verbose and args.output is not None:
+        sys.stdout.write('.')
+        sys.stdout.flush()
+
     else:
       output.write("%d 0 0 0 0\n" % k)
+      if args.verbose and args.output is not None:
+        sys.stdout.write('x')
+        sys.stdout.flush()
     
-    if args.verbose and args.output is not None:
-      sys.stdout.write('.')
-      sys.stdout.flush()
-
   if args.verbose and args.output is not None:
     sys.stdout.write('\n')
     sys.stdout.flush()
