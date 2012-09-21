@@ -1,2 +1,2 @@
 include README.rst *.cfg bootstrap.py
-recursive-include flandmark *.sql3 *.cpp *.h *.xml *.dat
+recursive-include flandmark *.cpp *.h *.xml *.dat
