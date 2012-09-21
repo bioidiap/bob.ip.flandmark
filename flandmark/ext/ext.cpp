@@ -8,6 +8,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/python.hpp>
+#include <bob/core/python/gil.h>
 #include <bob/core/python/ndarray.h>
 #include <cv.h>
 
@@ -28,6 +29,7 @@ static void delete_image(IplImage* i) {
 }
 
 static void delete_storage(CvMemStorage* s) {
+  cvClearMemStorage(s);
   cvReleaseMemStorage(&s);
 }
 
@@ -46,8 +48,8 @@ class Localizer {
     Localizer(const std::string& opencv_cascade,
         const std::string& flandmark_model) : 
       m_cascade((CvHaarClassifierCascade*)cvLoad(opencv_cascade.c_str(), 0, 0, 0), std::ptr_fun(delete_cascade)),
-      m_flandmark(flandmark_init(flandmark_model.c_str()), std::ptr_fun(delete_flandmark))//,
-      //m_storage(cvCreateMemStorage(0), std::ptr_fun(delete_storage))
+      m_flandmark(flandmark_init(flandmark_model.c_str()), std::ptr_fun(delete_flandmark)),
+      m_storage(cvCreateMemStorage(0), std::ptr_fun(delete_storage))
     {
       if( !m_cascade ) {
         PYTHON_ERROR(RuntimeError, "Couldnt load Face detector '%s'", opencv_cascade.c_str());
@@ -64,8 +66,6 @@ class Localizer {
      * Locates the landmarks from an input image
      */
     tuple operator() (bob::python::const_ndarray input) {
-      //bob::python::no_gil unlock;
-
       //checks type
       const bob::core::array::typeinfo& type = input.type();
       if ((type.dtype != bob::core::array::t_uint8) || (type.nd != 2)) {
@@ -74,22 +74,17 @@ class Localizer {
 
       //converts to IplImage
       const blitz::Array<uint8_t, 2> bz = input.bz<uint8_t,2>();
-      boost::shared_ptr<IplImage> ipl_image(cvCreateImage(cvSize(type.shape[1],
-              type.shape[0]), IPL_DEPTH_8U, 1), std::ptr_fun(delete_image));
-      char* saved_ipl_data = ipl_image->imageData;
-      ipl_image->imageData = (char*)bz.data(); //replace
-    
+      boost::shared_ptr<IplImage> ipl_image(cvCreateImageHeader(cvSize(type.shape[1], type.shape[0]), IPL_DEPTH_8U, 1), std::ptr_fun(delete_image));
+      ipl_image->imageData = (char*)bz.data();
+
       // Flags for OpenCV face detection
       CvSize minFeatureSize = cvSize(40, 40);
       int flags =  CV_HAAR_DO_CANNY_PRUNING;
       float search_scale_factor = 1.1f;
 
       // Detect all the faces in the greyscale image.
-      boost::shared_ptr<CvMemStorage> m_storage(cvCreateMemStorage(0), 
-          std::ptr_fun(delete_storage));
-      cvClearMemStorage(m_storage.get());
       CvSeq* rects = cvHaarDetectObjects(ipl_image.get(), m_cascade.get(),
-          m_storage.get(), search_scale_factor, 2, flags, minFeatureSize);
+            m_storage.get(), search_scale_factor, 2, flags, minFeatureSize);
       int nFaces = rects->total;
 
       list retval;
@@ -116,7 +111,7 @@ class Localizer {
         retval.append(det);
       }
 
-      ipl_image->imageData = saved_ipl_data;
+      ipl_image->imageData = 0;
 
       return tuple(retval);
 
@@ -126,7 +121,7 @@ class Localizer {
 
     boost::shared_ptr<CvHaarClassifierCascade> m_cascade;
     boost::shared_ptr<FLANDMARK_Model> m_flandmark;
-    //boost::shared_ptr<CvMemStorage> m_storage;
+    boost::shared_ptr<CvMemStorage> m_storage;
     boost::shared_array<float> m_landmarks;
 
 };
