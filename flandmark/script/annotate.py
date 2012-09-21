@@ -42,6 +42,10 @@ on the frame is considered. The entries in each line are:
 
   [19:21]
     Nose
+
+If no faces are found on the frame, the line will only display an invalid
+bounding box with zeros, e.g. `327 0 0 0 0`. No landmarks will be displayed in
+this case.
 """
 
 import os
@@ -67,6 +71,13 @@ def main():
   parser.add_argument('video', metavar='VIDEO', type=str,
       help="Video file to load")
 
+  parser.add_argument('output', metavar='OUTPUT', type=str,
+      default=None, nargs='?',
+      help="If you prefer the output diverged to a file, enter this argument")
+
+  parser.add_argument('-v', '--verbose', default=False, action='store_true',
+      help="Increases the output verbosity level")
+
   from ..version import __version__
   name = os.path.basename(os.path.splitext(sys.argv[0])[0])
   parser.add_argument('-V', '--version', action='version',
@@ -77,17 +88,30 @@ def main():
   if not os.path.exists(args.video):
     parser.error("Input video file '%s' cannot be read" % args.video)
 
+  output = sys.stdout
+  if args.output is not None:
+    output = open(args.output, 'wt')
+
   op = Localizer()
   v = bob.io.VideoReader(args.video)
+  if args.verbose and args.output is not None:
+    print "Locating faces in %d frames" % len(v),
   for k, frame in enumerate(v):
     dets = op(frame)
     if dets:
       biggest = get_biggest(dets)
       bbox = biggest['bbox']
       landmarks = biggest['landmark']
-      print "%d %d %d %d %d" % ((k,) + bbox),
-      for pair in landmarks:
-        print "%d %d" % (round(pair[0]), round(pair[1])),
-      print ""
+      output.write("%d %d %d %d %d " % ((k,) + bbox))
+      lstr = " ".join("%d %d" % (round(p[0]), round(p[1])) for p in landmarks)
+      output.write(lstr + "\n")
     else:
-      print "%d 0 0 0 0" % k
+      output.write("%d 0 0 0 0\n" % k)
+    
+    if args.verbose and args.output is not None:
+      sys.stdout.write('.')
+      sys.stdout.flush()
+
+  if args.verbose and args.output is not None:
+    sys.stdout.write('\n')
+    sys.stdout.flush()
