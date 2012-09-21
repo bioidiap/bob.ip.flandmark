@@ -89,7 +89,17 @@ def main():
     parser.error("Input video file '%s' cannot be read" % args.video)
 
   output = sys.stdout
+
   if args.output is not None:
+    dirname = os.path.dirname(args.output)
+
+    if dirname and not os.path.exists(dirname):
+      try:
+        os.makedirs(dirname)
+      except OSError as exc:
+        if exc.errno == errno.EEXIST: pass
+        else: raise
+
     output = open(args.output, 'wt')
 
   op = Localizer()
