@@ -8,7 +8,7 @@
 
 import sys
 import subprocess
-from distutils.core import setup
+from setuptools import setup, find_packages
 from distutils.extension import Extension
 
 def pkgconfig(package):
@@ -82,8 +82,30 @@ def setup_bob_extension(ext_name, sources):
       )
 
 setup(
+
     name="flandmark",
     version="1.0.6",
+    description="",
+    license="GPLv3",
+    author='Andre Anjos',
+    author_email='andre.anjos@idiap.ch',
+    long_description=open('README.rst').read(),
+
+    packages=find_packages(),
+    include_package_data=True,
+    zip_safe=False,
+
+    install_requires=[
+      'setuptools',
+      'bob',
+      ],
+
+    entry_points = {
+      'console_scripts': [
+        'annotate.py = flandmark.script.annotate:main',
+        ],
+      },
+
     ext_modules=[
       setup_bob_extension("flandmark._flandmark",
         [
@@ -91,4 +113,15 @@ setup(
           "flandmark/ext/liblbp.cpp",
           "flandmark/ext/ext.cpp",
         ])
-      ])
+      ],
+
+    classifiers = [
+      'Development Status :: 4 - Beta',
+      'Intended Audience :: Developers',
+      'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+      'Natural Language :: English',
+      'Programming Language :: Python',
+      'Topic :: Scientific/Engineering :: Artificial Intelligence',
+      ],
+    
+    )

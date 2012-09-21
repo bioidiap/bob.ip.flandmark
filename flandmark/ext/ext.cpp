@@ -106,7 +106,7 @@ class Localizer {
 
         // The first point represents the center of the bounding box used by
         // the flandmark library.
-        for (int i = 2; i < (2*m_flandmark->data.options.M); i += 2) {
+        for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
           lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
         }
         det["landmark"] = lmlist;

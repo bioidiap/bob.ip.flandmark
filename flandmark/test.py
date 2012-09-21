@@ -30,8 +30,8 @@ class FlandmarkTest(unittest.TestCase):
 
     v = bob.io.VideoReader(INPUT_VIDEO)
 
-    for i, f in enumerate(v):
-      self.assertTrue(op(bob.ip.rgb_to_gray(f)))
+    for f in v:
+      self.assertTrue(op(f))
 
   def xtest02_broken(self):
 
@@ -39,6 +39,5 @@ class FlandmarkTest(unittest.TestCase):
         "flandmark/flandmark_model.dat")
 
     for i, f in enumerate(bob.io.VideoReader(INPUT_VIDEO)):
-      v = bob.ip.rgb_to_gray(f)
       print v
       self.assertTrue(op(v))
