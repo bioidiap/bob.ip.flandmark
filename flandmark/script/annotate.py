@@ -97,6 +97,7 @@ def main():
       try:
         os.makedirs(dirname)
       except OSError as exc:
+        import errno
         if exc.errno == errno.EEXIST: pass
         else: raise
 
