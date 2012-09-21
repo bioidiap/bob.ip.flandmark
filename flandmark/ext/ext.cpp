@@ -109,7 +109,7 @@ class Localizer {
         for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
           lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
         }
-        det["landmark"] = lmlist;
+        det["landmark"] = tuple(lmlist);
 
         retval.append(det);
       }
