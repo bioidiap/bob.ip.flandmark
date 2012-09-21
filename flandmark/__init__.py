@@ -15,7 +15,7 @@ class Localizer(_flandmark.Localizer):
   """
 
   def __init__(self, detection_model=resource_filename(__name__, 
-    'haarcascade_frontalface_alt.xml'), 
+    'haarcascade_frontalface_alt.xml'),
     localization_model=resource_filename(__name__,
       'flandmark_model.dat')):
     """Builds a new facial localization model.
