@@ -39,4 +39,6 @@ class FlandmarkTest(unittest.TestCase):
         "flandmark/flandmark_model.dat")
 
     for i, f in enumerate(bob.io.VideoReader(INPUT_VIDEO)):
-      self.assertTrue(op(bob.ip.rgb_to_gray(f)))
+      v = bob.ip.rgb_to_gray(f)
+      print v
+      self.assertTrue(op(v))

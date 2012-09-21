@@ -96,8 +96,11 @@ class Localizer {
         det["bbox"] = make_tuple(r->x, r->y, r->width, r->height);
         int bbox[4] = {r->x, r->y, r->x + r->width, r->y + r->height};
 
-        flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
-            m_landmarks.get());
+        {
+          bob::python::no_gil unlock;
+          flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
+              m_landmarks.get());
+        }
 
         list lmlist; ///< landmark list
 
