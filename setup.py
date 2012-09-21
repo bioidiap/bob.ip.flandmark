@@ -85,7 +85,7 @@ setup(
     name="flandmark",
     version="1.0.6",
     ext_modules=[
-      setup_bob_extension("_flandmark",
+      setup_bob_extension("flandmark._flandmark",
         [
           "flandmark/ext/flandmark_detector.cpp",
           "flandmark/ext/liblbp.cpp",
