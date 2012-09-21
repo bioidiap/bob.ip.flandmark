@@ -66,5 +66,5 @@ Pretty simple, just do something like::
   video = bob.io.VideoReader('myvideo.avi')
   localize = flandmark.Localizer()
 
-  for i, frame in enumerate(video):
+  for frame in video:
     print localize(frame)
