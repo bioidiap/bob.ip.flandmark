@@ -12,3 +12,5 @@ sphinx
 dist
 .project
 .pydevproject
+build
+*.so
