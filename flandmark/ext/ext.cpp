@@ -25,6 +25,7 @@ static void delete_flandmark(FLANDMARK_Model* o) {
 }
 
 static void delete_image(IplImage* i) {
+  i->imageData = 0; ///< never delete blitz::Array data
   cvReleaseImage(&i);
 }
 
@@ -73,9 +74,8 @@ class Localizer {
       }
 
       //converts to IplImage
-      const blitz::Array<uint8_t, 2> bz = input.bz<uint8_t,2>();
       boost::shared_ptr<IplImage> ipl_image(cvCreateImageHeader(cvSize(type.shape[1], type.shape[0]), IPL_DEPTH_8U, 1), std::ptr_fun(delete_image));
-      ipl_image->imageData = (char*)bz.data();
+      ipl_image->imageData = (char*)input.bz<uint8_t,2>().data();
 
       // Flags for OpenCV face detection
       CvSize minFeatureSize = cvSize(40, 40);
@@ -113,8 +113,6 @@ class Localizer {
 
         retval.append(det);
       }
-
-      ipl_image->imageData = 0;
 
       return tuple(retval);
 
