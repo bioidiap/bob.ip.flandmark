@@ -5,9 +5,9 @@
  * @brief Boost.Python extension to flandmark
  */
 
+#include <boost/python.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
-#include <boost/python.hpp>
 #include <bob/core/python/gil.h>
 #include <bob/core/python/ndarray.h>
 #include <cv.h>

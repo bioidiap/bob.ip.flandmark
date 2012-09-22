@@ -57,8 +57,18 @@ def pkgconfig(package):
     if flag_map.has_key(token[:2]):
       kw.setdefault(flag_map.get(token[:2]), []).append(token[2:])
 
-    else: # throw others to extra_link_args
+    elif token[0] == '-': # throw others to extra_link_args
       kw.setdefault('extra_compile_args', []).append(token)
+
+    else: # these are maybe libraries
+      if os.path.exists(token):
+        dirname = os.path.dirname(token)
+        if dirname not in kw.get('library_dirs', []):
+          kw.setdefault('library_dirs', []).append(dirname)
+
+        bname = os.path.splitext(os.path.basename(token))[0][3:]
+        if bname not in kw.get('libraries', []):
+          kw.setdefault('libraries', []).append(bname)
 
   for k, v in kw.iteritems(): # remove duplicated
     kw[k] = uniq(v)
