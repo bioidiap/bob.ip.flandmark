@@ -25,19 +25,7 @@ class FlandmarkTest(unittest.TestCase):
 
   def test01_video(self):
 
-    op = Localizer("flandmark/haarcascade_frontalface_alt.xml",
-        "flandmark/flandmark_model.dat")
+    op = Localizer()
 
-    v = bob.io.VideoReader(INPUT_VIDEO)
-
-    for f in v:
+    for f in bob.io.VideoReader(INPUT_VIDEO):
       self.assertTrue(op(f))
-
-  def xtest02_broken(self):
-
-    op = Localizer("flandmark/haarcascade_frontalface_alt.xml",
-        "flandmark/flandmark_model.dat")
-
-    for i, f in enumerate(bob.io.VideoReader(INPUT_VIDEO)):
-      print v
-      self.assertTrue(op(v))
