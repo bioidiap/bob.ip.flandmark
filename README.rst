@@ -4,8 +4,8 @@
 
 This package is a simple Boost.Python wrapper to the (rather quick) open-source
 facial landmark detector `flandmark
-<http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php>`_. If you use this
-package, the author asks you to cite the following paper::
+<http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php>`_, **version 1.0.6**.
+If you use this package, the author asks you to cite the following paper::
 
   @InProceedings{Uricar-Franc-Hlavac-VISAPP-2012,
     author =      {U{\\v{r}}i{\\v{c}}{\\'{a}}{\\v{r}}, Michal and Franc, Vojt{\\v{e}}ch and Hlav{\\'{a}}{\\v{c}}, V{\\'{a}}clav},

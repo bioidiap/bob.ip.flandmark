@@ -94,7 +94,7 @@ def setup_bob_extension(ext_name, sources):
 setup(
 
     name="xbob.flandmark",
-    version="1.0.6",
+    version="1.0.0",
     description="",
     license="GPLv3",
     author='Andre Anjos',
