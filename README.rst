@@ -32,26 +32,7 @@ If you use this package, the author asks you to cite the following paper::
   }
 
 Installation
-------------
-
-To install these bindings, you will need the open-source library `Bob
-<http://www.idiap.ch/software/bob/>`_ installed somewhere. At least version 1.1
-of Bob is required. If you have compiled Bob yourself and installed it on a
-non-standard location, you will need to note down the path leading to the root
-of that installation.
-
-Just type::
-
-  $ python bootstrap.py
-  $ ./bin/buildout
-
-If Bob is installed in a non-standard location, edit the file ``buildout.cfg``
-to set the root to Bob's local installation path. Remember to use the **same
-python interpreter** that was used to compile Bob, then execute the same steps
-as above.
-
-On your own buildout
-====================
+============
 
 You can just add a dependence for ``xbob.flandmark`` on your ``setup.py`` to
 automatically download and have this package available at your satellite
@@ -77,6 +58,25 @@ example::
   environment = env
 
   ...
+
+Development
+-----------
+
+To install these bindings, you will need the open-source library `Bob
+<http://www.idiap.ch/software/bob/>`_ installed somewhere. At least version 1.1
+of Bob is required. If you have compiled Bob yourself and installed it on a
+non-standard location, you will need to note down the path leading to the root
+of that installation.
+
+Just type::
+
+  $ python bootstrap.py
+  $ ./bin/buildout
+
+If Bob is installed in a non-standard location, edit the file ``buildout.cfg``
+to set the root to Bob's local installation path. Remember to use the **same
+python interpreter** that was used to compile Bob, then execute the same steps
+as above.
 
 Usage
 -----
