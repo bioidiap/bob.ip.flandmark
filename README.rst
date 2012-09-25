@@ -32,7 +32,7 @@ If you use this package, the author asks you to cite the following paper::
   }
 
 Installation
-============
+------------
 
 You can just add a dependence for ``xbob.flandmark`` on your ``setup.py`` to
 automatically download and have this package available at your satellite
@@ -62,7 +62,7 @@ example::
 Development
 -----------
 
-To install these bindings, you will need the open-source library `Bob
+To develop these bindings, you will need the open-source library `Bob
 <http://www.idiap.ch/software/bob/>`_ installed somewhere. At least version 1.1
 of Bob is required. If you have compiled Bob yourself and installed it on a
 non-standard location, you will need to note down the path leading to the root
