@@ -100,6 +100,7 @@ setup(
     author='Andre Anjos',
     author_email='andre.anjos@idiap.ch',
     long_description=open('README.rst').read(),
+    url='http://pypi.python.org/pypi/xbob.flandmark',
 
     packages=find_packages(),
     include_package_data=True,
