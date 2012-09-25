@@ -45,15 +45,10 @@ Just type::
   $ python bootstrap.py
   $ ./bin/buildout
 
-If Bob is installed in a non-standard location, remember to use the **same
-python interpreter** that was used to compile Bob (replace ``<bob-root>`` with
-the root of your local installation of Bob)::
-
-  $ <bob-root>/bin/python bootstrap.py
-  $ PKG_CONFIG_PATH=<bob-root>/lib/pkgconfig ./bin/buildout
-
-The `PKG_CONFIG_PATH` variable will help ``buildout`` find the correct include
-and link paths to your non-stock Bob installation.
+If Bob is installed in a non-standard location, edit the file ``buildout.cfg``
+to set the root to Bob's local installation path. Remember to use the **same
+python interpreter** that was used to compile Bob, then execute the same steps
+as above.
 
 Usage
 -----
