@@ -95,7 +95,7 @@ setup(
 
     name="xbob.flandmark",
     version="1.0.0",
-    description="",
+    description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
     author_email='andre.anjos@idiap.ch',
