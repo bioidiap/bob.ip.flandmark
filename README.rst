@@ -56,7 +56,7 @@ Usage
 Pretty simple, just do something like::
 
   import bob
-  import flandmark
+  from xbob import flandmark
 
   video = bob.io.VideoReader('myvideo.avi')
   localize = flandmark.Localizer()

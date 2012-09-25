@@ -105,6 +105,10 @@ setup(
     include_package_data=True,
     zip_safe=False,
 
+    namespace_packages=[
+      "xbob",
+      ],
+
     install_requires=[
       'setuptools',
       'bob',
@@ -112,16 +116,16 @@ setup(
 
     entry_points = {
       'console_scripts': [
-        'annotate.py = flandmark.script.annotate:main',
+        'annotate.py = xbob.flandmark.script.annotate:main',
         ],
       },
 
     ext_modules=[
-      setup_bob_extension("flandmark._flandmark",
+      setup_bob_extension("xbob.flandmark._flandmark",
         [
-          "flandmark/ext/flandmark_detector.cpp",
-          "flandmark/ext/liblbp.cpp",
-          "flandmark/ext/ext.cpp",
+          "xbob/flandmark/ext/flandmark_detector.cpp",
+          "xbob/flandmark/ext/liblbp.cpp",
+          "xbob/flandmark/ext/ext.cpp",
         ])
       ],
 
