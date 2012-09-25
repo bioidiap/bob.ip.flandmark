@@ -50,6 +50,34 @@ to set the root to Bob's local installation path. Remember to use the **same
 python interpreter** that was used to compile Bob, then execute the same steps
 as above.
 
+On your own buildout
+====================
+
+You can just add a dependence for ``xbob.flandmark`` on your ``setup.py`` to
+automatically download and have this package available at your satellite
+package. This works well if Bob is installed centrally at your machine. 
+
+Otherwise, you will need to tell ``buildout`` how to build the package locally
+and how to find Bob. For that, just add a custom egg recipe to your
+buildout that will fetch the package and compile it locally, setting the
+environment variable ``PKG_CONFIG_PATH`` to where Bob is installed. For
+example::
+
+  [buildout]
+  parts = flandmark <other parts here...>
+  ...
+
+  [env]
+  PKG_CONFIG_PATH = /Users/andre/work/bob/build/install/lib/pkgconfig
+
+  ...
+
+  [flandmark]
+  recipe = zc.recipe.egg:custom
+  environment = env
+
+  ...
+
 Usage
 -----
 
