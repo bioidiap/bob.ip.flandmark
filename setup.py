@@ -85,16 +85,16 @@ def setup_bob_extension(ext_name, sources):
       ext_name,
       sources=sources,
       language="c++",
-      include_dirs=bob['include_dirs'] + ocv['include_dirs'],
-      library_dirs=bob['library_dirs'] + ocv.get('library_dirs', []),
-      runtime_library_dirs=bob['library_dirs'] + ocv.get('library_dirs', []),
-      libraries=bob['libraries'] + ocv['libraries'],
+      include_dirs=bob.get('include_dirs',[]) + ocv.get('include_dirs',[]),
+      library_dirs=bob.get('library_dirs',[]) + ocv.get('library_dirs', []),
+      runtime_library_dirs=bob.get('library_dirs',[]) + ocv.get('library_dirs', []),
+      libraries=bob.get('libraries',[]) + ocv.get('libraries',[]),
       )
 
 setup(
 
     name="xbob.flandmark",
-    version="1.0.0",
+    version="1.0.1",
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
