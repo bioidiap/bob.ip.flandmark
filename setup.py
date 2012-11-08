@@ -94,7 +94,7 @@ def setup_bob_extension(ext_name, sources):
 setup(
 
     name="xbob.flandmark",
-    version="1.0.1",
+    version="1.0.2",
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
@@ -131,7 +131,7 @@ setup(
       ],
 
     classifiers = [
-      'Development Status :: 4 - Beta',
+      'Development Status :: 5 - Production/Stable',
       'Intended Audience :: Developers',
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
       'Natural Language :: English',
