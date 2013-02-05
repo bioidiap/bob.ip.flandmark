@@ -50,7 +50,7 @@ setup(
           "xbob/flandmark/ext/liblbp.cpp",
           "xbob/flandmark/ext/ext.cpp",
         ],
-        bob_modules = [
+        pkgconfig = [
           'opencv',
           ]
         )
