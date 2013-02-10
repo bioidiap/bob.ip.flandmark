@@ -4,7 +4,8 @@
 
 This package is a simple Boost.Python wrapper to the (rather quick) open-source
 facial landmark detector `flandmark
-<http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php>`_, **version 1.0.6**.
+<http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php>`_, **version 1.0.7**
+(or the github state as of 10/february/2013).
 If you use this package, the author asks you to cite the following paper::
 
   @InProceedings{Uricar-Franc-Hlavac-VISAPP-2012,
@@ -41,21 +42,18 @@ package. This works well if Bob is installed centrally at your machine.
 Otherwise, you will need to tell ``buildout`` how to build the package locally
 and how to find Bob. For that, just add a custom egg recipe to your
 buildout that will fetch the package and compile it locally, setting the
-environment variable ``PKG_CONFIG_PATH`` to where Bob is installed. For
-example::
+buildout variable ``prefixes`` to where Bob is installed (a build directory
+will work as well). For example::
 
   [buildout]
   parts = flandmark <other parts here...>
   ...
-
-  [env]
-  PKG_CONFIG_PATH = /Users/andre/work/bob/build/install/lib/pkgconfig
+  prefixes = /Users/andre/work/bob/build/debug
 
   ...
 
   [flandmark]
-  recipe = zc.recipe.egg:custom
-  environment = env
+  recipe = xbob.buildout:develop
 
   ...
 
