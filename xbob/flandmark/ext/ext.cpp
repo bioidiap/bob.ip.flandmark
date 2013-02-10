@@ -60,7 +60,7 @@ class Localizer {
         PYTHON_ERROR(RuntimeError, "Structure model wasn't created. Corrupted file '%s'", flandmark_model.c_str());
       }
 
-      m_landmarks.reset(new float[2*m_flandmark->data.options.M]);
+      m_landmarks.reset(new double[2*m_flandmark->data.options.M]);
     }
 
     /**
@@ -123,7 +123,7 @@ class Localizer {
     boost::shared_ptr<CvHaarClassifierCascade> m_cascade;
     boost::shared_ptr<FLANDMARK_Model> m_flandmark;
     boost::shared_ptr<CvMemStorage> m_storage;
-    boost::shared_array<float> m_landmarks;
+    boost::shared_array<double> m_landmarks;
 
 };
 

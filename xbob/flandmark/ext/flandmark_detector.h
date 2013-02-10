@@ -1,3 +1,13 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Written (W) 2012 Michal Uricar
+ * Copyright (C) 2012 Michal Uricar
+ */
+
 #ifndef __FLANDMARK_DETECTOR_H_
 #define __FLANDMARK_DETECTOR_H_
 
@@ -32,7 +42,6 @@ typedef struct lbp_struct {
 
 typedef struct data_struct {
     FLANDMARK_LBP * lbp;
-    int Images_ROWS, Images_COLS;
     int imSize[2];
     int * mapTable;
     FLANDMARK_Options options;
@@ -43,11 +52,8 @@ typedef struct model_struct {
     int W_ROWS, W_COLS;
     FLANDMARK_Data data;
     uint8_t *normalizedImageFrame;
-    IplImage *croppedImage;
-    IplImage *resizedImage;
     double *bb;
     float *sf;
-    int p_width, p_height;
 } FLANDMARK_Model;
 
 typedef struct psi_struct {
@@ -72,7 +78,7 @@ enum EError_T {
     ERROR_DATA_LBP=7,
     ERROR_DATA_OPTIONS_S=8,
     ERROR_DATA_OPTIONS_PSIG=9,
-    UNKNOWN_ERROR=100,
+    UNKNOWN_ERROR=100
 };
 
 // read / write structure Model from / to file procedures
@@ -95,7 +101,7 @@ FLANDMARK_Model * flandmark_init(const char* filename);
  * \param[in] filename
  * \param[in] model
  */
-void flandmark_writeModel(const char* filename, FLANDMARK_Model* model);
+void flandmark_write_model(const char* filename, FLANDMARK_Model* model);
 
 /**
  * Function flandmark_checkModel
@@ -106,7 +112,7 @@ void flandmark_writeModel(const char* filename, FLANDMARK_Model* model);
  * \param[in] tst
  * \return
  */
-EError_T flandmark_checkModel(FLANDMARK_Model* model, FLANDMARK_Model* tst);
+EError_T flandmark_check_model(FLANDMARK_Model* model, FLANDMARK_Model* tst);
 
 /**
  * Function flandmark_free
@@ -124,7 +130,7 @@ void flandmark_free(FLANDMARK_Model* model);
  * \param[in] model
  * \param[in] lbpidx
  */
-void flandmark_getPsiMat(FLANDMARK_PSI* Psi, FLANDMARK_Model* model, int lbpidx);
+void flandmark_get_psi_mat(FLANDMARK_PSI* Psi, FLANDMARK_Model* model, int lbpidx);
 
 /**
  * Computes LBP features representing it as sparse matrix (i.e. only inices with ones are stored in connected list)
@@ -133,7 +139,7 @@ void flandmark_getPsiMat(FLANDMARK_PSI* Psi, FLANDMARK_Model* model, int lbpidx)
  * \param[in] model
  * \param[in] lbpidx
  */
-void flandmark_getPsiMatSparse(FLANDMARK_PSI_SPARSE* Psi, FLANDMARK_Model* model, int lbpidx);
+void flandmark_get_psi_mat_sparse(FLANDMARK_PSI_SPARSE* Psi, FLANDMARK_Model* model, int lbpidx);
 
 // dot product maximization with max-index return
 /**
@@ -143,18 +149,26 @@ void flandmark_getPsiMatSparse(FLANDMARK_PSI_SPARSE* Psi, FLANDMARK_Model* model
  * \param[in]
  * \param[out]
  */
-void maximize_gdotprod(double *maximum, double *idx, double *first, double *second, int *third, int cols, int tsize);
+void flandmark_maximize_gdotprod(double *maximum, double *idx, const double *first, const double *second, const int *third, const int cols, const int tsize);
 
 /**
  * Function getNormalizedImageFrame
  *
  *
  */
-int getNormalizedImageFrame(IplImage *input, const int bbox[], double *bb, uint8_t *face_img, FLANDMARK_Model *model);
+int flandmark_get_normalized_image_frame(IplImage *input, const int bbox[], double *bb, uint8_t *face_img, FLANDMARK_Model *model);
 
-int imCrop(IplImage *input, IplImage *output, const CvRect region, FLANDMARK_Model *model);
+/**
+ * Function imcrop
+ *
+ */
+int flandmark_imcrop(IplImage *input, IplImage *output, const CvRect region);
 
-int imResize(IplImage *input, IplImage *output, int width, int height, FLANDMARK_Model *model);
+/**
+ * Function argmax
+ *
+ */
+void flandmark_argmax(double *smax, FLANDMARK_Options *options, const int *mapTable, FLANDMARK_PSI_SPARSE *Psi_sparse, double **q, double **g);
 
 /**
  * Function flandmark_detect_base
@@ -166,7 +180,7 @@ int imResize(IplImage *input, IplImage *output, int width, int height, FLANDMARK
  * \param[in, out] int array representing 2D array of size [2 x options.M] with estimated positions of landmarks
  * \return int indicator of success or fail of the detection
  */
-int flandmark_detect_base(uint8_t *face_image, FLANDMARK_Model *model, float *landmarks);
+int flandmark_detect_base(uint8_t *face_image, FLANDMARK_Model *model, double *landmarks);
 
 /**
  * Function flandmark_detect
@@ -174,6 +188,6 @@ int flandmark_detect_base(uint8_t *face_image, FLANDMARK_Model *model, float *la
  * Estimates positions of facial landmarks given the image and the bounding box of the detected face
  *
  */
-int flandmark_detect(IplImage *img, int * bbox, FLANDMARK_Model *model, float * landmarks, int * bw_margin = 0);
+int flandmark_detect(IplImage *img, int * bbox, FLANDMARK_Model *model, double *landmarks, int * bw_margin = 0);
 
 #endif // __LIBFLD_DETECTOR_H_
