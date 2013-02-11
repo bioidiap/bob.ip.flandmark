@@ -12,7 +12,7 @@ from xbob.extension import Extension
 setup(
 
     name="xbob.flandmark",
-    version="1.0.3",
+    version="1.0.4",
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
