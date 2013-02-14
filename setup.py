@@ -6,13 +6,14 @@
 """Bindings for flandmark
 """
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, dist
+dist.Distribution(dict(setup_requires='xbob.extension'))
 from xbob.extension import Extension
 
 setup(
 
     name="xbob.flandmark",
-    version="1.0.4",
+    version="1.0.5",
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
