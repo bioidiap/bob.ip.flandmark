@@ -8,7 +8,7 @@ facial landmark detector `flandmark
 (or the github state as of 10/february/2013).
 If you use this package, the author asks you to cite the following paper::
 
-  @InProceedings{Uricar-Franc-Hlavac-VISAPP-2012,
+  @inproceedings{Uricar-Franc-Hlavac-VISAPP-2012,
     author =      {U{\\v{r}}i{\\v{c}}{\\'{a}}{\\v{r}}, Michal and Franc, Vojt{\\v{e}}ch and Hlav{\\'{a}}{\\v{c}}, V{\\'{a}}clav},
     title =       {Detector of Facial Landmarks Learned by the Structured Output {SVM}},
     year =        {2012},
@@ -27,8 +27,7 @@ If you use this package, the author asks you to cite the following paper::
     prestige =    {important},
     authorship =  {50-40-10},
     status =      {published},
-    project =     {FP7-ICT-247525 HUMAVIPS, PERG04-GA-2008-239455 SEMISOL, 
-      Czech Ministry of Education project 1M0567},
+    project =     {FP7-ICT-247525 HUMAVIPS, PERG04-GA-2008-239455 SEMISOL, Czech Ministry of Education project 1M0567},
     www = {http://www.visapp.visigrapp.org},
   }
 
