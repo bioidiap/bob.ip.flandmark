@@ -32,17 +32,30 @@ If you use this package, the author asks you to cite the following paper::
     www = {http://www.visapp.visigrapp.org},
   }
 
+You should also cite `Bob <http://www.idiap.ch/software/bob/>`_, as a core
+framework::
+
+  @inproceedings{Anjos_ACMMM_2012,
+    author = {A. Anjos AND L. El Shafey AND R. Wallace AND M. G\"unther AND C. McCool AND S. Marcel},
+    title = {Bob: a free signal processing and machine learning toolbox for researchers},
+    year = {2012},
+    month = oct,
+    booktitle = {20th ACM Conference on Multimedia Systems (ACMMM), Nara, Japan},
+    publisher = {ACM Press},
+    url = {http://publications.idiap.ch/downloads/papers/2012/Anjos_Bob_ACMMM12.pdf},
+  }
+
 Installation
 ------------
 
 You can just add a dependence for ``xbob.flandmark`` on your ``setup.py`` to
 automatically download and have this package available at your satellite
-package. This works well if Bob is installed centrally at your machine. 
+package. This works well if Bob_ is installed centrally at your machine. 
 
 Otherwise, you will need to tell ``buildout`` how to build the package locally
-and how to find Bob. For that, just add a custom egg recipe to your
+and how to find Bob_. For that, just add a custom egg recipe to your
 buildout that will fetch the package and compile it locally, setting the
-buildout variable ``prefixes`` to where Bob is installed (a build directory
+buildout variable ``prefixes`` to where Bob_ is installed (a build directory
 will work as well). For example::
 
   [buildout]
@@ -60,11 +73,10 @@ will work as well). For example::
 Development
 -----------
 
-To develop these bindings, you will need the open-source library `Bob
-<http://www.idiap.ch/software/bob/>`_ installed somewhere. At least version 1.1
-of Bob is required. If you have compiled Bob yourself and installed it on a
-non-standard location, you will need to note down the path leading to the root
-of that installation.
+To develop these bindings, you will need the open-source library Bob_ installed
+somewhere. At least version 1.1 of Bob is required. If you have compiled Bob
+yourself and installed it on a non-standard location, you will need to note
+down the path leading to the root of that installation.
 
 Just type::
 
