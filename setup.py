@@ -8,12 +8,12 @@
 
 from setuptools import setup, find_packages, dist
 dist.Distribution(dict(setup_requires='xbob.extension'))
-from xbob.extension import Extension
+from xbob.extension import Extension, build_ext
 
 setup(
 
     name="xbob.flandmark",
-    version="1.0.6",
+    version="1.0.7",
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
@@ -42,6 +42,10 @@ setup(
       'console_scripts': [
         'annotate.py = xbob.flandmark.script.annotate:main',
         ],
+      },
+
+    cmdclass={
+      'build_ext': build_ext,
       },
 
     ext_modules=[
