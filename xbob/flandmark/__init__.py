@@ -89,7 +89,7 @@ class Localizer(_flandmark.Localizer):
     else:
       raise TypeError, "Localizer accepts images as numpy.ndarray objects with either 2 or 3 dimensions"
 
-  def __call__(self, image, b_y, b_x, b_height, b_width):
+  def localize(self, image, b_y, b_x, b_height, b_width):
     """Localizes facial keypoints on all faces detected at the input image.
 
     Keyword parameters:
