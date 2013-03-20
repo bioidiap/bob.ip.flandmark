@@ -64,9 +64,9 @@ class Localizer {
     }
 
     /**
-     * Locates the landmarks from an input image
+     * Detect and locates the landmarks from an input image
      */
-    tuple operator() (bob::python::const_ndarray input) {
+    tuple call1(bob::python::const_ndarray input) {
       //checks type
       const bob::core::array::typeinfo& type = input.type();
       if ((type.dtype != bob::core::array::t_uint8) || (type.nd != 2)) {
@@ -115,8 +115,40 @@ class Localizer {
       }
 
       return tuple(retval);
-
     }
+
+
+    /**
+     * Detect and locates the landmarks from an input image
+     */
+    object call2(bob::python::const_ndarray input, const int b_y, const int b_x, const int b_height, const int b_width)
+    {
+      //checks type
+      const bob::core::array::typeinfo& type = input.type();
+      if ((type.dtype != bob::core::array::t_uint8) || (type.nd != 2)) {
+        PYTHON_ERROR(TypeError, "Input data must be a 2D numpy.array with dtype=uint8 (i.e. a gray-scaled image), but you passed %s", type.str().c_str());
+      }
+
+      //converts to IplImage
+      boost::shared_ptr<IplImage> ipl_image(cvCreateImageHeader(cvSize(type.shape[1], type.shape[0]), IPL_DEPTH_8U, 1), std::ptr_fun(delete_image));
+      ipl_image->imageData = (char*)input.bz<uint8_t,2>().data();
+
+      int bbox[4] = {b_x, b_y, b_x + b_width, b_y + b_height};
+      {
+        bob::python::no_gil unlock;
+        flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
+            m_landmarks.get());
+      }
+
+      list lmlist; ///< landmark list
+
+      for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
+        lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
+      }
+
+      return object(lmlist);
+    }
+
 
   private: //representation
 
@@ -131,6 +163,7 @@ BOOST_PYTHON_MODULE(_flandmark) {
   bob::python::setup_python("bindings to flandmark - a library for the localization of facial landmarks");
 
   class_<Localizer>("Localizer", "A key-point localization for faces using flandmark", init<const std::string&, const std::string&>((arg("detector"), arg("localizer")), "Initializes with both an OpenCV face detector model and an flandmark model"))
-    .def("__call__", &Localizer::operator(), (arg("self"), arg("image")), "Locates (possibly multiple) key-points on the given input image. Returns a list of located faces (by OpenCV's model), each attached to a list of key-points.")
+    .def("__call__", &Localizer::call1, (arg("image")), "Locates (possibly multiple) key-points on the given input image. Returns a list of located faces (by OpenCV's model), each attached to a list of key-points.")
+    .def("__call__", &Localizer::call2, (arg("image"), arg("b_y"), arg("b_x"), arg("b_height"), arg("b_width")), "Locates (possibly multiple) key-points on the given input image, given a bounding box and returns them as a list.")
     ;
 }

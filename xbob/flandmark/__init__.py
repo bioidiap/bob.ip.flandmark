@@ -88,3 +88,39 @@ class Localizer(_flandmark.Localizer):
 
     else:
       raise TypeError, "Localizer accepts images as numpy.ndarray objects with either 2 or 3 dimensions"
+
+  def __call__(self, image, b_y, b_x, b_height, b_width):
+    """Localizes facial keypoints on all faces detected at the input image.
+
+    Keyword parameters:
+
+    image
+      Either a gray-scale or colored image where to run the detection and
+      localization.
+
+    b_y
+      The top-left y-coordinate of the bounding box
+
+    b_x
+      The top-left x-coordinate of the bounding box
+
+    b_height
+      The height of the bounding box
+
+    b_width
+      The width of the bounding box
+
+    Returns the landmarks which are a list of tuples 
+    (representing x,y coordinates) with the landmarks.
+    """
+
+    if image.ndim == 3:
+      from bob.ip import rgb_to_gray
+      gray = rgb_to_gray(image)
+      return super(Localizer, self).__call__(gray, b_y, b_x, b_height, b_width)
+
+    elif image.ndim == 2:
+      return super(Localizer, self).__call__(gray, b_y, b_x, b_height, b_width)
+
+    else:
+      raise TypeError, "Localizer accepts images as numpy.ndarray objects with either 2 or 3 dimensions"
