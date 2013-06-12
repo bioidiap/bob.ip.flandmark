@@ -84,7 +84,7 @@ class Localizer(_flandmark.Localizer):
       return super(Localizer, self).__call__(gray)
 
     elif image.ndim == 2:
-      return super(Localizer, self).__call__(gray)
+      return super(Localizer, self).__call__(image)
 
     else:
       raise TypeError, "Localizer accepts images as numpy.ndarray objects with either 2 or 3 dimensions"
