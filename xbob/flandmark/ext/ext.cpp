@@ -96,18 +96,23 @@ class Localizer {
         det["bbox"] = make_tuple(r->x, r->y, r->width, r->height);
         int bbox[4] = {r->x, r->y, r->x + r->width, r->y + r->height};
 
+    		int flandmark_result;
         {
           bob::python::no_gil unlock;
-          flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
+          flandmark_result = flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
               m_landmarks.get());
         }
 
         list lmlist; ///< landmark list
 
-        // The first point represents the center of the bounding box used by
-        // the flandmark library.
-        for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
-          lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
+    		// do not copy the results when the landmark detector indicates an error.
+    		// otherwise stale results (from a previous invocation) are returned
+    		if (flandmark_result == NO_ERR) {
+          // The first point represents the center of the bounding box used by
+          // the flandmark library.
+          for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
+            lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
+          }
         }
         det["landmark"] = tuple(lmlist);
 
