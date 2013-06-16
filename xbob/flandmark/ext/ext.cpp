@@ -139,16 +139,19 @@ class Localizer {
       ipl_image->imageData = (char*)input.bz<uint8_t,2>().data();
 
       int bbox[4] = {b_x, b_y, b_x + b_width, b_y + b_height};
+      int flandmark_result;
       {
         bob::python::no_gil unlock;
-        flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
+        flandmark_result = flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
             m_landmarks.get());
       }
-
+      
       list lmlist; ///< landmark list
 
-      for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
-        lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
+      if (flandmark_result == NO_ERR) {
+        for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
+          lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
+        }
       }
 
       return object(lmlist);
