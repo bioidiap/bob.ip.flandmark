@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Andre Anjos <andre.anjos@idiap.ch>
-# Thu 20 Sep 2012 14:43:19 CEST 
+# Thu 20 Sep 2012 14:43:19 CEST
 
 """Bindings for flandmark
 """
@@ -13,7 +13,7 @@ from xbob.extension import Extension, build_ext
 setup(
 
     name="xbob.flandmark",
-    version="1.0.10",
+    version="1.0.11",
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
@@ -69,5 +69,5 @@ setup(
       'Programming Language :: Python',
       'Topic :: Scientific/Engineering :: Artificial Intelligence',
       ],
-    
+
     )
