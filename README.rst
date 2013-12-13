@@ -9,7 +9,7 @@ facial landmark detector `flandmark
 If you use this package, the author asks you to cite the following paper::
 
   @inproceedings{Uricar-Franc-Hlavac-VISAPP-2012,
-    author =      {U{\\v{r}}i{\\v{c}}{\\'{a}}{\\v{r}}, Michal and Franc, Vojt{\\v{e}}ch and Hlav{\\'{a}}{\\v{c}}, V{\\'{a}}clav},
+    author =      {U{\v{r}}i{\v{c}}{\'{a}}{\v{r}}, Michal and Franc, Vojt{\v{e}}ch and Hlav{\'{a}}{\v{c}}, V{\'{a}}clav},
     title =       {Detector of Facial Landmarks Learned by the Structured Output {SVM}},
     year =        {2012},
     pages =       {547-556},
@@ -49,7 +49,7 @@ Installation
 
 You can just add a dependence for ``xbob.flandmark`` on your ``setup.py`` to
 automatically download and have this package available at your satellite
-package. This works well if Bob_ is installed centrally at your machine. 
+package. This works well if Bob_ is installed centrally at your machine.
 
 Otherwise, you will need to tell ``buildout`` how to build the package locally
 and how to find Bob_. For that, just add a custom egg recipe to your
@@ -84,7 +84,7 @@ Just type::
 
 If Bob is installed in a non-standard location, edit the file ``buildout.cfg``
 to set the root to Bob's local installation path. Remember to use the **same
-python interpreter** that was used to compile Bob, then execute the same steps
+python interpreter** that was used to compile Bob_, then execute the same steps
 as above.
 
 Usage
@@ -96,7 +96,18 @@ Pretty simple, just do something like::
   from xbob import flandmark
 
   video = bob.io.VideoReader('myvideo.avi')
-  localize = flandmark.Localizer()
+  localizer = flandmark.Localizer()
 
   for frame in video:
-    print localize(frame)
+    print localizer(frame)
+
+If you already have a detected bounding box, you can plug the coordinates of the bounding box into the localizer call::
+
+  landmarks = localizer(image, top, left, height, width)
+
+In total, 8 ``landmarks`` are returned by the localizer.
+For the list and the interpretation of the landmarks, please have a look `here <http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php>`_.
+
+.. warning::
+  Since version 1.1 of this package, the landmarks are returned in the Bob_-typical order, which is ``(y,x)``.
+  Please update your code to this new behavior.

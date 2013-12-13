@@ -55,7 +55,7 @@ class Localizer {
      * flandmark model.
      */
     Localizer(const std::string& opencv_cascade,
-        const std::string& flandmark_model) : 
+        const std::string& flandmark_model) :
       m_cascade((CvHaarClassifierCascade*)cvLoad(opencv_cascade.c_str(), 0, 0, 0), std::ptr_fun(delete_cascade)),
       m_flandmark(flandmark_init(flandmark_model.c_str()), std::ptr_fun(delete_flandmark)),
       m_storage(cvCreateMemStorage(0), std::ptr_fun(delete_storage))
@@ -63,7 +63,7 @@ class Localizer {
       if( !m_cascade ) {
         PYTHON_ERROR(RuntimeError, "Couldnt load Face detector '%s'", opencv_cascade.c_str());
       }
-    
+
       if ( !m_flandmark ) {
         PYTHON_ERROR(RuntimeError, "Structure model wasn't created. Corrupted file '%s'", flandmark_model.c_str());
       }
@@ -99,7 +99,7 @@ class Localizer {
       for (int iface = 0; iface < (rects ? nFaces : 0); ++iface) {
 
         CvRect* r = (CvRect*)cvGetSeqElem(rects, iface);
-        
+
         dict det;
         det["bbox"] = make_tuple(r->x, r->y, r->width, r->height);
         int bbox[4] = {r->x, r->y, r->x + r->width, r->y + r->height};
@@ -119,7 +119,7 @@ class Localizer {
           // The first point represents the center of the bounding box used by
           // the flandmark library.
           for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
-            lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
+            lmlist.append(make_tuple(m_landmarks[i+1], m_landmarks[i]));
           }
         }
         det["landmark"] = tuple(lmlist);
@@ -153,12 +153,12 @@ class Localizer {
         flandmark_result = flandmark_detect(ipl_image.get(), bbox, m_flandmark.get(),
             m_landmarks.get());
       }
-      
+
       list lmlist; ///< landmark list
 
       if (flandmark_result == NO_ERR) {
         for (int i = 0; i < (2*m_flandmark->data.options.M); i += 2) {
-          lmlist.append(make_tuple(m_landmarks[i], m_landmarks[i+1]));
+          lmlist.append(make_tuple(m_landmarks[i+1], m_landmarks[i]));
         }
       }
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 # Andre Anjos <andre.anjos@idiap.ch>
-# Fri 21 Sep 2012 10:43:12 CEST 
+# Fri 21 Sep 2012 10:43:12 CEST
 
 """Annotates videos, dumps annotations as text files.
 
@@ -114,7 +114,7 @@ def main():
       bbox = biggest['bbox']
       landmarks = biggest['landmark']
       output.write("%d %d %d %d %d " % ((k,) + bbox))
-      lstr = " ".join("%d %d" % (round(p[0]), round(p[1])) for p in landmarks)
+      lstr = " ".join("%d %d" % (round(p[1]), round(p[0])) for p in landmarks)
       output.write(lstr + "\n")
       if args.verbose and args.output is not None:
         sys.stdout.write('.')
@@ -125,7 +125,7 @@ def main():
       if args.verbose and args.output is not None:
         sys.stdout.write('x')
         sys.stdout.flush()
-    
+
   if args.verbose and args.output is not None:
     sys.stdout.write('\n')
     sys.stdout.flush()
