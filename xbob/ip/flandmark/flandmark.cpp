@@ -31,6 +31,9 @@ static auto s_class = xbob::extension::ClassDoc(
     "You input an image and a bounding-box specification and it returns you the "
     "positions for multiple key-points for the given face image.\n"
     "\n"
+    "Consult http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php for more "
+    "information.\n"
+    "\n"
     )
     .add_constructor(
         xbob::extension::FunctionDoc(
@@ -218,6 +221,8 @@ static PyObject* PyBobIpFlandmark_call_single(PyBobIpFlandmarkObject* self,
 
   if (!PyArg_ParseTupleAndKeywords(args, kwds, "O&iiii", kwlist,
         &PyBlitzArray_Converter, &image, &y, &x, &height, &width)) return 0;
+
+  auto image_ = make_safe(image);
 
   //check
   if (image->type_num != NPY_UINT8 || image->ndim != 2) {
