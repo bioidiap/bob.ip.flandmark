@@ -7,58 +7,65 @@
 """
 
 from setuptools import setup, find_packages, dist
-dist.Distribution(dict(setup_requires='xbob.extension'))
-from xbob.extension import Extension, build_ext
+dist.Distribution(dict(setup_requires=['xbob.blitz', 'xbob.io']))
+from xbob.blitz.extension import Extension
+import xbob.io
+
+version = '2.0.0a0'
+packages = ['opencv>=2.0']
+
+include_dirs = [xbob.io.get_include()]
 
 setup(
 
-    name="xbob.flandmark",
-    version="1.1.0",
+    name="xbob.ip.flandmark",
+    version=version,
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
     author_email='andre.anjos@idiap.ch',
     long_description=open('README.rst').read(),
-    url='http://pypi.python.org/pypi/xbob.flandmark',
+    url='https://github.com/bioidiap/xbob.ip.flandmark',
 
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
 
-    namespace_packages=[
-      "xbob",
-      ],
-
-    setup_requires=[
-      'xbob.extension',
-      ],
-
     install_requires=[
       'setuptools',
-      'bob',
+      'xbob.blitz',
+      'xbob.io', #for tests
+    ],
+
+    namespace_packages=[
+      "xbob",
+      "xbob.ip",
       ],
 
     entry_points = {
       'console_scripts': [
-        'annotate.py = xbob.flandmark.script.annotate:main',
+        'xbob_flandmark.py = xbob.flandmark.script.annotate:main',
         ],
-      },
-
-    cmdclass={
-      'build_ext': build_ext,
       },
 
     ext_modules=[
-      Extension("xbob.flandmark._flandmark",
+      Extension("xbob.ip.flandmark.version",
         [
-          "xbob/flandmark/ext/flandmark_detector.cpp",
-          "xbob/flandmark/ext/liblbp.cpp",
-          "xbob/flandmark/ext/ext.cpp",
-        ],
-        pkgconfig = [
-          'opencv',
-          ]
-        )
+          "xbob/ip/flandmark/version.cpp",
+          ],
+        version = version,
+        packages = packages,
+        ),
+      Extension("xbob.ip.flandmark._library",
+        [
+          "xbob/ip/flandmark/flandmark_detector.cpp",
+          "xbob/ip/flandmark/liblbp.cpp",
+          "xbob/ip/flandmark/flandmark.cpp",
+          "xbob/ip/flandmark/main.cpp",
+          ],
+        version = version,
+        packages = packages,
+        ),
       ],
 
     classifiers = [

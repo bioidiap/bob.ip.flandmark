@@ -47,7 +47,7 @@ framework::
 Installation
 ------------
 
-You can just add a dependence for ``xbob.flandmark`` on your ``setup.py`` to
+You can just add a dependence for ``xbob.ip.flandmark`` on your ``setup.py`` to
 automatically download and have this package available at your satellite
 package. This works well if Bob_ is installed centrally at your machine.
 

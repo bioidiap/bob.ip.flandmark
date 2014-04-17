@@ -9,12 +9,12 @@ def __filename__(f):
 class Localizer(_flandmark.Localizer):
   """A fast and effective facial landmark localization framework based on
   flandmark
-  
+
   Consult http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php for more
   information.
   """
 
-  def __init__(self, detection_model=resource_filename(__name__, 
+  def __init__(self, detection_model=resource_filename(__name__,
     'haarcascade_frontalface_alt.xml'),
     localization_model=resource_filename(__name__,
       'flandmark_model.dat')):
@@ -110,7 +110,7 @@ class Localizer(_flandmark.Localizer):
     b_width
       The width of the bounding box
 
-    Returns the landmarks which are a list of tuples 
+    Returns the landmarks which are a list of tuples
     (representing x,y coordinates) with the landmarks.
     """
 

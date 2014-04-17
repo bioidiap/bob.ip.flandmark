@@ -5,20 +5,8 @@
  * @brief Boost.Python extension to flandmark
  */
 
-#include <boost/python.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
-
-#include <bob/config.h>
-#ifdef BOB_API_VERSION
-#  include <bob/python/gil.h>
-#  include <bob/python/ndarray.h>
-#else
-#  include <bob/core/python/gil.h>
-#  include <bob/core/python/ndarray.h>
-#endif
-
-#include <cv.h>
 
 #include "flandmark_detector.h"
 
