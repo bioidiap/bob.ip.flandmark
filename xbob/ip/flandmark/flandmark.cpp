@@ -12,6 +12,7 @@
 #include <structmember.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/shared_array.hpp>
 
 #include "flandmark_detector.h"
 
@@ -62,7 +63,8 @@ static int PyBobIpFlandmark_init
         &PyBobIo_FilenameConverter, &model)) return -1;
 
   if (!model) { //use what is stored in __default_model__
-    PyObject* default_model = PyObject_GetAttrString(self, "__default_model__");
+    PyObject* default_model = PyObject_GetAttrString((PyObject*)self,
+        "__default_model__");
     if (!default_model) {
       PyErr_Format(PyExc_RuntimeError, "`%s' needs a model to properly initialize, but the user has not passed one and `__default_model__' is not properly set", Py_TYPE(self)->tp_name);
       return -1;
@@ -77,9 +79,9 @@ static int PyBobIpFlandmark_init
   const char* c_filename = 0;
 
 # if PY_VERSION_HEX >= 0x03000000
-  c_filename = PyBytes_AS_STRING(filename);
+  c_filename = PyBytes_AS_STRING(model);
 # else
-  c_filename = PyString_AS_STRING(filename);
+  c_filename = PyString_AS_STRING(model);
 # endif
   Py_DECREF(model);
 
@@ -113,7 +115,7 @@ static void PyBobIpFlandmark_delete (PyBobIpFlandmarkObject* self) {
   self->landmarks = 0;
   flandmark_free(self->flandmark);
   self->flandmark = 0;
-  Py_TYPE(&self->parent)->tp_free((PyObject*)self);
+  Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 static void delete_image(IplImage* i) {
@@ -126,41 +128,41 @@ static void delete_image(IplImage* i) {
  * bounding boxes.
  */
 static PyObject* call(PyBobIpFlandmarkObject* self,
-    boost::shared_ptr<IplImage> image, const std::vector<int[4]>& bbx) {
+    boost::shared_ptr<IplImage> image, int nbbx, boost::shared_array<int> bbx) {
 
-  PyObject* retval = PyTuple_New(bbx.size());
+  PyObject* retval = PyTuple_New(nbbx);
   if (!retval) return 0;
   auto retval_ = make_safe(retval);
 
-  Py_ssize_t index = 0;
-  for (auto it=bbx.begin(); it!=bbx.end; ++it, ++index) {
+  for (int i=0; i<nbbx; ++i) {
 
+    int result = 0;
     Py_BEGIN_ALLOW_THREADS
-    int result = flandmark_detect(ipl_image.get(), *it, self->flandmark,
-        self->landmarks);
+    result = flandmark_detect(image.get(), &bbx[4*i],
+        self->flandmark, self->landmarks);
     Py_END_ALLOW_THREADS
 
     PyObject* landmarks = 0;
-    if (flandmark_result == NO_ERR) {
-      Py_INCREF(Py_NONE);
-      landmarks = Py_NONE;
+    if (result == NO_ERR) {
+      Py_INCREF(Py_None);
+      landmarks = Py_None;
     }
     else {
       landmarks = PyTuple_New(self->flandmark->data.options.M);
       if (!landmarks) return 0;
       auto landmarks_ = make_safe(landmarks);
-      for (int i = 0; i < (2*self->flandmark->data.options.M); i += 2) {
-        PyTuple_SET_ITEM(landmarks, i/2,
+      for (int k = 0; k < (2*self->flandmark->data.options.M); k += 2) {
+        PyTuple_SET_ITEM(landmarks, k/2,
             Py_BuildValue("nn",
-              self->landmarks[i+1], //y value
-              self->landmarks[i]    //x value
+              self->landmarks[k+1], //y value
+              self->landmarks[k]    //x value
               )
             );
-        if (!PyTuple_GET_ITEM(landmarks, i/2)) return 0;
+        if (!PyTuple_GET_ITEM(landmarks, k/2)) return 0;
       }
       Py_INCREF(landmarks);
     }
-    PyTuple_SET_ITEM(retval, index, landmarks);
+    PyTuple_SET_ITEM(retval, i, landmarks);
 
   }
 
@@ -196,8 +198,8 @@ static auto s_call = xbob::extension::FunctionDoc(
     .add_prototype("image, y, x, height, width", "landmarks")
     .add_parameter("image", "array-like (2D, uint8)",
       "The image Flandmark will operate on")
-    .add_parameter("y, x", "The top left-most corner of the bounding box containing the face image you want to locate keypoints on.")
-    .add_parameter("height, width", "The dimensions accross ``y`` (height) and ``x`` (width) for the bounding box, in number of pixels.")
+    .add_parameter("y, x", "int", "The top left-most corner of the bounding box containing the face image you want to locate keypoints on.")
+    .add_parameter("height, width", "int", "The dimensions accross ``y`` (height) and ``x`` (width) for the bounding box, in number of pixels.")
     .add_return("landmarks", "tuple", "A sequence of tuples, each containing locations in the format ``(y, x)``, for each of the key-points defined above and in that order.")
     ;
 
@@ -209,17 +211,17 @@ static PyObject* PyBobIpFlandmark_call_single(PyBobIpFlandmarkObject* self,
   static char** kwlist = const_cast<char**>(const_kwlist);
 
   PyBlitzArrayObject* image = 0;
-  Py_ssize_t y = 0;
-  Py_ssize_t x = 0;
-  Py_ssize_t height = 0;
-  Py_ssize_t width = 0;
+  int y = 0;
+  int x = 0;
+  int height = 0;
+  int width = 0;
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O&nnnn", kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O&iiii", kwlist,
         &PyBlitzArray_Converter, &image, &y, &x, &height, &width)) return 0;
 
   //check
   if (image->type_num != NPY_UINT8 || image->ndim != 2) {
-    PyErr_Format(PyExc_TypeError, "`%s' input `image' data must be a 2D array with dtype `uint8' (i.e. a gray-scaled image), but you passed a %" PY_FORMAT_SIZE_T "d array with data type `%s'", Py_TYPE(self)->tp_name, image->ndim, PyBlitzArrayCxx_TypenumAsString(image->type_num));
+    PyErr_Format(PyExc_TypeError, "`%s' input `image' data must be a 2D array with dtype `uint8' (i.e. a gray-scaled image), but you passed a %" PY_FORMAT_SIZE_T "d array with data type `%s'", Py_TYPE(self)->tp_name, image->ndim, PyBlitzArray_TypenumAsString(image->type_num));
     return 0;
   }
 
@@ -228,10 +230,13 @@ static PyObject* PyBobIpFlandmark_call_single(PyBobIpFlandmarkObject* self,
   cv_image->imageData = reinterpret_cast<char*>(image->data);
 
   //prepares the bbx vector
-  std::vector<int[4]> bbx;
-  bbx.push_back({x, y, x + width, y + height});
+  boost::shared_array<int> bbx(new int[4]);
+  bbx[0] = x;
+  bbx[1] = y;
+  bbx[2] = x + width;
+  bbx[3] = y + height;
 
-  return call(self, cv_image, bbx);
+  return call(self, cv_image, 1, bbx);
 
 };
 

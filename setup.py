@@ -12,7 +12,7 @@ from xbob.blitz.extension import Extension
 import xbob.io
 
 version = '2.0.0a0'
-packages = ['opencv>=2.0']
+packages = ['boost', 'opencv>=2.0']
 
 include_dirs = [xbob.io.get_include()]
 
@@ -53,6 +53,7 @@ setup(
         [
           "xbob/ip/flandmark/version.cpp",
           ],
+        include_dirs = include_dirs,
         version = version,
         packages = packages,
         ),
@@ -63,6 +64,7 @@ setup(
           "xbob/ip/flandmark/flandmark.cpp",
           "xbob/ip/flandmark/main.cpp",
           ],
+        include_dirs = include_dirs,
         version = version,
         packages = packages,
         ),
