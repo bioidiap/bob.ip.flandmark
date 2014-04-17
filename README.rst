@@ -1,3 +1,18 @@
+.. vim: set fileencoding=utf-8 :
+.. Andre Anjos <andre.anjos@idiap.ch>
+.. Thu 17 Apr 16:59:12 2014 CEST
+
+.. image:: https://travis-ci.org/bioidiap/xbob.ip.flandmark.svg?branch=master
+   :target: https://travis-ci.org/bioidiap/xbob.ip.flandmark
+.. image:: https://coveralls.io/repos/bioidiap/xbob.ip.flandmark/badge.png
+   :target: https://coveralls.io/r/bioidiap/xbob.ip.flandmark
+.. image:: http://img.shields.io/github/tag/bioidiap/xbob.ip.flandmark.png
+   :target: https://github.com/bioidiap/xbob.ip.flandmark
+.. image:: http://img.shields.io/pypi/v/xbob.ip.flandmark.png
+   :target: https://pypi.python.org/pypi/xbob.ip.flandmark
+.. image:: http://img.shields.io/pypi/dm/xbob.ip.flandmark.png
+   :target: https://pypi.python.org/pypi/xbob.ip.flandmark
+
 ==============================
  Python Bindings to flandmark
 ==============================
