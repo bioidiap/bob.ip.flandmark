@@ -146,7 +146,7 @@ static PyObject* call(PyBobIpFlandmarkObject* self,
     Py_END_ALLOW_THREADS
 
     PyObject* landmarks = 0;
-    if (result == NO_ERR) {
+    if (result != NO_ERR) {
       Py_INCREF(Py_None);
       landmarks = Py_None;
     }
@@ -156,7 +156,7 @@ static PyObject* call(PyBobIpFlandmarkObject* self,
       auto landmarks_ = make_safe(landmarks);
       for (int k = 0; k < (2*self->flandmark->data.options.M); k += 2) {
         PyTuple_SET_ITEM(landmarks, k/2,
-            Py_BuildValue("nn",
+            Py_BuildValue("dd",
               self->landmarks[k+1], //y value
               self->landmarks[k]    //x value
               )
@@ -241,7 +241,17 @@ static PyObject* PyBobIpFlandmark_call_single(PyBobIpFlandmarkObject* self,
   bbx[2] = x + width;
   bbx[3] = y + height;
 
-  return call(self, cv_image, 1, bbx);
+  PyObject* retval = call(self, cv_image, 1, bbx);
+  if (!retval) return 0;
+
+  //gets the first entry, return it
+  PyObject* retval0 = PyTuple_GET_ITEM(retval, 0);
+  if (!retval0) return 0;
+
+  Py_INCREF(retval0);
+  Py_DECREF(retval);
+
+  return retval0;
 
 };
 
@@ -263,7 +273,7 @@ PyObject* PyBobIpFlandmark_Repr(PyBobIpFlandmarkObject* self) {
    * <xbob.ip.flandmark(model='...')>
    */
 
-  PyObject* retval = PyUnicode_FromFormat("<%s(model=%s)>",
+  PyObject* retval = PyUnicode_FromFormat("<%s(model='%s')>",
       Py_TYPE(self)->tp_name, self->filename.c_str());
 
 #if PYTHON_VERSION_HEX < 0x03000000

@@ -35,6 +35,7 @@ setup(
       'setuptools',
       'xbob.blitz',
       'xbob.io', #for tests
+      'xbob.ip.color', #for tests
     ],
 
     namespace_packages=[
@@ -67,6 +68,7 @@ setup(
         include_dirs = include_dirs,
         version = version,
         packages = packages,
+        boost_modules = ['system'],
         ),
       ],
 

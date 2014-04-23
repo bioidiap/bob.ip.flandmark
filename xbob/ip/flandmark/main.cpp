@@ -10,11 +10,38 @@
 #endif
 #include <xbob.blitz/capi.h>
 #include <xbob.blitz/cleanup.h>
+#include <xbob.io/api.h>
+#include <xbob.extension/documentation.h>
 
 extern PyTypeObject PyBobIpFlandmark_Type;
 
+static auto s_setter = xbob::extension::FunctionDoc(
+    "__set_default_model__",
+    "Internal function to set the default model for the Flandmark class"
+    )
+    .add_prototype("path", "")
+    .add_parameter("path", "str", "The path to the new model file")
+    ;
+
+PyObject* set_flandmark_model(PyObject*, PyObject* o) {
+
+  int ok = PyDict_SetItemString(PyBobIpFlandmark_Type.tp_dict,
+      "__default_model__", o);
+
+  if (ok == -1) return 0;
+
+  Py_RETURN_NONE;
+
+}
+
 static PyMethodDef module_methods[] = {
-    {0}  /* Sentinel */
+  {
+    s_setter.name(),
+    (PyCFunction)set_flandmark_model,
+    METH_O,
+    s_setter.doc()
+  },
+  {0}  /* Sentinel */
 };
 
 PyDoc_STRVAR(module_docstr, "Flandmark keypoint localization library");
@@ -31,6 +58,10 @@ static PyModuleDef module_definition = {
 #endif
 
 static PyObject* create_module (void) {
+
+  //makes sure that PyBobIpFlandmark_Type has a dictionary on tp_dict
+  PyBobIpFlandmark_Type.tp_dict = PyDict_New();
+  if (!PyBobIpFlandmark_Type.tp_dict) return 0;
 
   PyBobIpFlandmark_Type.tp_new = PyType_GenericNew;
   if (PyType_Ready(&PyBobIpFlandmark_Type) < 0) return 0;
@@ -52,6 +83,7 @@ static PyObject* create_module (void) {
 
   /* imports xbob.blitz C-API + dependencies */
   if (import_xbob_blitz() < 0) return 0;
+  if (import_xbob_io() < 0) return 0;
 
   Py_INCREF(m);
   return m;
