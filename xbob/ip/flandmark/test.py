@@ -81,6 +81,7 @@ def is_inside(point, box, eps=1e-5):
 
 def opencv_available(test):
   """Decorator for detecting if OpenCV/Python bindings are available"""
+  from nose.plugins.skip import SkipTest
 
   @functools.wraps(test)
   def wrapper(*args, **kwargs):
