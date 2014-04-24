@@ -7,6 +7,8 @@
 """
 
 import os
+import numpy
+import functools
 import pkg_resources
 import nose.tools
 import xbob.io
@@ -20,7 +22,7 @@ def F(f):
 
 LENA = F('lena.jpg')
 LENA_BBX = [
-    (214, 202, 183, 183)
+    [214, 202, 183, 183]
     ] #from OpenCV's cascade detector
 
 MULTI = F('multi.jpg')
@@ -45,10 +47,75 @@ def opencv_detect(image):
       1.3, #scaleFactor (at each time the image is re-scaled)
       4, #minNeighbors (around candidate to be retained)
       0, #flags (normally, should be set to zero)
-      (20,20), #(minSize, maxSize) (of detected objects)
+      (20,20), #(minSize, maxSize) (of detected objects on that scale)
       )
 
-@nose.tools.nottest
+def pnpoly(point, vertices):
+  """Python translation of the C algorithm taken from:
+  http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+  """
+
+  (x, y) = point
+  j = vertices[-1]
+  c = False
+  for i in vertices:
+    if ( (i[1] > y) != (j[1] > y) ) and \
+        ( x < (((j[0]-i[0]) * (y-i[1]) / (j[1]-i[1])) + i[0]) ):
+      c = not c
+    j = i
+
+  return c
+
+def is_inside(point, box, eps=1e-5):
+  """Calculates, using matplotlib, if a point lies inside a bounding box"""
+
+  (y, x, height, width) = box
+  #note: vertices must be organized clockwise
+  vertices = numpy.array([
+    (x-eps, y-eps),
+    (x+width+eps, y-eps),
+    (x+width+eps, y+height+eps),
+    (x-eps, y+height+eps),
+    ], dtype=float)
+  return pnpoly((point[1], point[0]), vertices)
+
+def opencv_available(test):
+  """Decorator for detecting if OpenCV/Python bindings are available"""
+
+  @functools.wraps(test)
+  def wrapper(*args, **kwargs):
+    try:
+      import cv2
+      return test(*args, **kwargs)
+    except ImportError:
+      raise SkipTest("The cv2 module is not available")
+
+  return wrapper
+
+def test_is_inside():
+
+  box = (0, 0, 1, 1)
+
+  # really inside
+  assert is_inside((0.5, 0.5), box, eps=1e-10)
+
+  # on the limit of the box
+  assert is_inside((0.0, 0.0), box, eps=1e-10)
+  assert is_inside((1.0, 1.0), box, eps=1e-10)
+  assert is_inside((1.0, 0.0), box, eps=1e-10)
+  assert is_inside((0.0, 1.0), box, eps=1e-10)
+
+def test_is_outside():
+
+  box = (0, 0, 1, 1)
+
+  # really outside the box
+  assert not is_inside((1.5, 1.0), box, eps=1e-10)
+  assert not is_inside((0.5, 1.5), box, eps=1e-10)
+  assert not is_inside((1.5, 1.5), box, eps=1e-10)
+  assert not is_inside((-0.5, -0.5), box, eps=1e-10)
+
+@opencv_available
 def test_lena_opencv():
 
   img = xbob.io.load(LENA)
@@ -57,7 +124,10 @@ def test_lena_opencv():
 
   flm = Flandmark()
   keypoints = flm.locate(gray, y, x, height, width)
-  assert keypoints
+  nose.tools.eq_(keypoints.shape, (8, 2))
+  nose.tools.eq_(keypoints.dtype, 'float64')
+  for k in keypoints:
+    assert is_inside(k, (y, x, height, width), eps=1)
 
 def test_lena():
 
@@ -67,10 +137,12 @@ def test_lena():
 
   flm = Flandmark()
   keypoints = flm.locate(gray, y, x, height, width)
-  assert keypoints
-  nose.tools.eq_(len(keypoints), 8)
+  nose.tools.eq_(keypoints.shape, (8, 2))
+  nose.tools.eq_(keypoints.dtype, 'float64')
+  for k in keypoints:
+    assert is_inside(k, (y, x, height, width), eps=1)
 
-@nose.tools.nottest
+@opencv_available
 def test_multi_opencv():
 
   img = xbob.io.load(MULTI)
@@ -80,7 +152,10 @@ def test_multi_opencv():
   flm = Flandmark()
   for (x, y, width, height) in bbx:
     keypoints = flm.locate(gray, y, x, height, width)
-    assert keypoints
+    nose.tools.eq_(keypoints.shape, (8, 2))
+    nose.tools.eq_(keypoints.dtype, 'float64')
+    for k in keypoints:
+      assert is_inside(k, (y, x, height, width), eps=1)
 
 def test_multi():
 
@@ -90,5 +165,7 @@ def test_multi():
   flm = Flandmark()
   for (x, y, width, height) in MULTI_BBX:
     keypoints = flm.locate(gray, y, x, height, width)
-    assert keypoints
-    nose.tools.eq_(len(keypoints), 8)
+    nose.tools.eq_(keypoints.shape, (8, 2))
+    nose.tools.eq_(keypoints.dtype, 'float64')
+    for k in keypoints:
+      assert is_inside(k, (y, x, height, width), eps=1)

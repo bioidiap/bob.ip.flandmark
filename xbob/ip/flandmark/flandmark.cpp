@@ -49,7 +49,6 @@ static auto s_class = xbob::extension::ClassDoc(
 typedef struct {
   PyObject_HEAD
   FLANDMARK_Model* flandmark;
-  double* landmarks;
   std::string filename;
 } PyBobIpFlandmarkObject;
 
@@ -97,25 +96,15 @@ static int PyBobIpFlandmark_init
     return -1;
   }
 
-  //flandmark is now initialized, allocate keypoint place-holder
-  self->landmarks = new double[2*self->flandmark->data.options.M];
-  if (!self->landmarks) {
-    flandmark_free(self->flandmark);
-    PyErr_Format(PyExc_RuntimeError, "`%s' could not allocate memory for %d keypoint place-holders for model `%s'", Py_TYPE(self)->tp_name, 2*self->flandmark->data.options.M, c_filename);
-    return -1;
-  }
-
-  //set filename
+  //flandmark is now initialized, set filename
   self->filename = c_filename;
 
-  //all good, flandmark is initialized
+  //all good, flandmark is ready
   return 0;
 
 }
 
 static void PyBobIpFlandmark_delete (PyBobIpFlandmarkObject* self) {
-  delete[] self->landmarks;
-  self->landmarks = 0;
   flandmark_free(self->flandmark);
   self->flandmark = 0;
   Py_TYPE(self)->tp_free((PyObject*)self);
@@ -139,32 +128,35 @@ static PyObject* call(PyBobIpFlandmarkObject* self,
 
   for (int i=0; i<nbbx; ++i) {
 
+    //allocate output array _and_ Flandmark buffer within a single structure
+    Py_ssize_t shape[2];
+    shape[0] = self->flandmark->data.options.M;
+    shape[1] = 2;
+    PyObject* landmarks = PyArray_SimpleNew(2, shape, NPY_FLOAT64);
+    if (!landmarks) return 0;
+    auto landmarks_ = make_safe(landmarks);
+    double* buffer = reinterpret_cast<double*>(PyArray_DATA((PyArrayObject*)landmarks));
+
     int result = 0;
     Py_BEGIN_ALLOW_THREADS
-    result = flandmark_detect(image.get(), &bbx[4*i],
-        self->flandmark, self->landmarks);
+    result = flandmark_detect(image.get(), &bbx[4*i], self->flandmark, buffer);
     Py_END_ALLOW_THREADS
 
-    PyObject* landmarks = 0;
     if (result != NO_ERR) {
       Py_INCREF(Py_None);
       landmarks = Py_None;
     }
     else {
-      landmarks = PyTuple_New(self->flandmark->data.options.M);
-      if (!landmarks) return 0;
-      auto landmarks_ = make_safe(landmarks);
+      //swap keypoint coordinates (x, y) -> (y, x)
+      double tmp;
       for (int k = 0; k < (2*self->flandmark->data.options.M); k += 2) {
-        PyTuple_SET_ITEM(landmarks, k/2,
-            Py_BuildValue("dd",
-              self->landmarks[k+1], //y value
-              self->landmarks[k]    //x value
-              )
-            );
-        if (!PyTuple_GET_ITEM(landmarks, k/2)) return 0;
+        tmp         = buffer[k];
+        buffer[k]   = buffer[k+1];
+        buffer[k+1] = tmp;
       }
       Py_INCREF(landmarks);
     }
+
     PyTuple_SET_ITEM(retval, i, landmarks);
 
   }
@@ -192,7 +184,7 @@ static auto s_call = xbob::extension::FunctionDoc(
     "4. Mouth-corner-l (left corner of the mouth)\n"
     "5. Canthus-rr (outer corner of the right eye)\n"
     "6. Canthus-ll (outer corner of the left eye)\n"
-    "7.  Nose\n"
+    "7. Nose\n"
     "\n"
     "Each point is returned as tuple defining the pixel positions in the form "
     "(y, x).\n"
@@ -203,7 +195,7 @@ static auto s_call = xbob::extension::FunctionDoc(
       "The image Flandmark will operate on")
     .add_parameter("y, x", "int", "The top left-most corner of the bounding box containing the face image you want to locate keypoints on.")
     .add_parameter("height, width", "int", "The dimensions accross ``y`` (height) and ``x`` (width) for the bounding box, in number of pixels.")
-    .add_return("landmarks", "tuple", "A sequence of tuples, each containing locations in the format ``(y, x)``, for each of the key-points defined above and in that order.")
+    .add_return("landmarks", "array (2D, float64)", "Each row in the output array contains the locations of keypoints in the format ``(y, x)``")
     ;
 
 static PyObject* PyBobIpFlandmark_call_single(PyBobIpFlandmarkObject* self,
