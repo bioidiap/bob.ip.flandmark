@@ -16,3 +16,5 @@ build
 *.so
 src/
 xbob.extension*.egg
+.gdb_history
+core
