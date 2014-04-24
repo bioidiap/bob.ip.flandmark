@@ -14,14 +14,13 @@
    :target: https://pypi.python.org/pypi/xbob.ip.flandmark
 
 ==============================
- Python Bindings to flandmark
+ Python Bindings to Flandmark
 ==============================
 
-This package is a simple Boost.Python wrapper to the (rather quick) open-source
-facial landmark detector `flandmark
-<http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php>`_, **version 1.0.7**
-(or the github state as of 10/february/2013).
-If you use this package, the author asks you to cite the following paper::
+This package is a simple Python wrapper to the (rather quick) open-source
+facial landmark detector `Flandmark`_, **version 1.0.7** (or the github state
+as of 10/february/2013). If you use this package, the author asks you to cite
+the following paper::
 
   @inproceedings{Uricar-Franc-Hlavac-VISAPP-2012,
     author =      {U{\v{r}}i{\v{c}}{\'{a}}{\v{r}}, Michal and Franc, Vojt{\v{e}}ch and Hlav{\'{a}}{\v{c}}, V{\'{a}}clav},
@@ -46,8 +45,8 @@ If you use this package, the author asks you to cite the following paper::
     www = {http://www.visapp.visigrapp.org},
   }
 
-You should also cite `Bob <http://www.idiap.ch/software/bob/>`_, as a core
-framework::
+You should also cite `Bob`_, as a core framework, in which these bindings are
+based on::
 
   @inproceedings{Anjos_ACMMM_2012,
     author = {A. Anjos AND L. El Shafey AND R. Wallace AND M. G\"unther AND C. McCool AND S. Marcel},
@@ -62,67 +61,59 @@ framework::
 Installation
 ------------
 
-You can just add a dependence for ``xbob.ip.flandmark`` on your ``setup.py`` to
-automatically download and have this package available at your satellite
-package. This works well if Bob_ is installed centrally at your machine.
+Install it through normal means, via PyPI or use ``zc.buildout`` to bootstrap
+the package and run test units.
 
-Otherwise, you will need to tell ``buildout`` how to build the package locally
-and how to find Bob_. For that, just add a custom egg recipe to your
-buildout that will fetch the package and compile it locally, setting the
-buildout variable ``prefixes`` to where Bob_ is installed (a build directory
-will work as well). For example::
+Documentation
+-------------
 
-  [buildout]
-  parts = flandmark <other parts here...>
-  ...
-  prefixes = /Users/andre/work/bob/build/debug
+You can generate the documentation for this package, after installation, using
+Sphinx::
 
-  ...
+  $ sphinx-build -b html doc sphinx
 
-  [flandmark]
-  recipe = xbob.buildout:develop
+This shall place in the directory ``sphinx``, the current version for the
+documentation of the package.
 
-  ...
+Testing
+-------
+
+You can run a set of tests using the nose test runner::
+
+  $ nosetests -sv xbob.ap
+
+.. warning::
+
+   If Bob <= 1.2.1 is installed on your python path, nose will automatically
+   load the old version of the insulate plugin available in Bob, which will
+   trigger the loading of incompatible shared libraries (from Bob itself), in
+   to your working binary. This will cause a stack corruption. Either remove
+   the centrally installed version of Bob, or build your own version of Python
+   in which Bob <= 1.2.1 is not installed.
+
+You can run our documentation tests using sphinx itself::
+
+  $ sphinx-build -b doctest doc sphinx
+
+You can test overall test coverage with::
+
+  $ nosetests --with-coverage --cover-package=xbob.ip.flandmark
+
+The ``coverage`` egg must be installed for this to work properly.
 
 Development
 -----------
 
-To develop these bindings, you will need the open-source library Bob_ installed
-somewhere. At least version 1.1 of Bob is required. If you have compiled Bob
-yourself and installed it on a non-standard location, you will need to note
-down the path leading to the root of that installation.
-
-Just type::
+To develop this package, install using ``zc.buildout``, using the buildout
+configuration found on the root of the package::
 
   $ python bootstrap.py
+  ...
   $ ./bin/buildout
 
-If Bob is installed in a non-standard location, edit the file ``buildout.cfg``
-to set the root to Bob's local installation path. Remember to use the **same
-python interpreter** that was used to compile Bob_, then execute the same steps
-as above.
+Tweak the options in ``buildout.cfg`` to disable/enable verbosity and debug
+builds.
 
-Usage
------
-
-Pretty simple, just do something like::
-
-  import bob
-  from xbob import flandmark
-
-  video = bob.io.VideoReader('myvideo.avi')
-  localizer = flandmark.Localizer()
-
-  for frame in video:
-    print localizer(frame)
-
-If you already have a detected bounding box, you can plug the coordinates of the bounding box into the localizer call::
-
-  landmarks = localizer(image, top, left, height, width)
-
-In total, 8 ``landmarks`` are returned by the localizer.
-For the list and the interpretation of the landmarks, please have a look `here <http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php>`_.
-
-.. warning::
-  Since version 1.1 of this package, the landmarks are returned in the Bob_-typical order, which is ``(y,x)``.
-  Please update your code to this new behavior.
+.. Place your references here:
+.. _flandmark: http://cmp.felk.cvut.cz/~uricamic/flandmark/index.php
+.. _bob: https://www.idiap.ch/software/bob

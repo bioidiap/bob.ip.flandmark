@@ -36,18 +36,14 @@ setup(
       'xbob.blitz',
       'xbob.io', #for tests
       'xbob.ip.color', #for tests
+      'xbob.ip.draw', #for doc generation
+      'matplotlib', #for doc generation
     ],
 
     namespace_packages=[
       "xbob",
       "xbob.ip",
       ],
-
-    entry_points = {
-      'console_scripts': [
-        'xbob_flandmark.py = xbob.flandmark.script.annotate:main',
-        ],
-      },
 
     ext_modules=[
       Extension("xbob.ip.flandmark.version",
