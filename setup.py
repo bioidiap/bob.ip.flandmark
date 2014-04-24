@@ -12,7 +12,7 @@ from xbob.blitz.extension import Extension
 import xbob.io
 
 version = '2.0.0a0'
-packages = ['boost', 'opencv>=2.0']
+packages = ['boost', 'opencv>=2.0', 'bob-io>=1.2.2']
 
 include_dirs = [xbob.io.get_include()]
 
