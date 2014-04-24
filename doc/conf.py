@@ -281,10 +281,10 @@ intersphinx_mapping = {
   }
 
 try:
-  __import__('cv2')
+  import cv2
   has_opencv = True
 except ImportError:
   has_opencv = False
 
 def setup(app):
-  app.add_config_value('has_opencv', has_opencv, True)
+  app.add_config_value('has_opencv', has_opencv, 'html')
