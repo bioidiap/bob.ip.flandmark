@@ -5,11 +5,12 @@
  * @brief Bob/Python extension to flandmark
  */
 
-#include <xbob.extension/documentation.h>
 #include <xbob.blitz/cppapi.h>
 #include <xbob.blitz/cleanup.h>
 #include <xbob.io/api.h>
 #include <structmember.h>
+
+#include <xbob.extension/documentation.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
