@@ -15,6 +15,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
 
+#include <cstring>
+
 #include "flandmark_detector.h"
 
 /******************************************
@@ -50,7 +52,7 @@ static auto s_class = xbob::extension::ClassDoc(
 typedef struct {
   PyObject_HEAD
   FLANDMARK_Model* flandmark;
-  std::string filename;
+  char* filename;
 } PyBobIpFlandmarkObject;
 
 static int PyBobIpFlandmark_init
@@ -98,7 +100,7 @@ static int PyBobIpFlandmark_init
   }
 
   //flandmark is now initialized, set filename
-  self->filename = c_filename;
+  self->filename = strndup(c_filename, 256);
 
   //all good, flandmark is ready
   return 0;
@@ -108,6 +110,8 @@ static int PyBobIpFlandmark_init
 static void PyBobIpFlandmark_delete (PyBobIpFlandmarkObject* self) {
   flandmark_free(self->flandmark);
   self->flandmark = 0;
+  free(self->filename);
+  self->filename = 0;
   Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
@@ -269,7 +273,7 @@ PyObject* PyBobIpFlandmark_Repr(PyBobIpFlandmarkObject* self) {
    */
 
   PyObject* retval = PyUnicode_FromFormat("<%s(model='%s')>",
-      Py_TYPE(self)->tp_name, self->filename.c_str());
+      Py_TYPE(self)->tp_name, self->filename);
 
 #if PYTHON_VERSION_HEX < 0x03000000
   if (!retval) return 0;
