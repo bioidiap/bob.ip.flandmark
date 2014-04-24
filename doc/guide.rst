@@ -85,7 +85,7 @@ provided (gray-scaled) image:
      >>> lena_gray = rgb_to_gray(load(LENA) # uses 'lena.jpg'
      >>> face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
      >>> print face_bbxs
-     [[214, 202, 183, 183]]
+     [[...]]
 
 .. ifconfig:: has_opencv
 
@@ -99,7 +99,7 @@ provided (gray-scaled) image:
      >>> lena_gray = rgb_to_gray(load(get_file('lena.jpg')))
      >>> face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
      >>> print face_bbxs
-     [[214, 202, 183, 183]]
+     [[...]]
 
 The function ``detectMultiScale`` returns OpenCV_ rectangles as 2D
 :py:class:`numpy.ndarray`'s. Each row corresponds to a detected face at the
@@ -117,7 +117,7 @@ can find the keypoints in the following way:
    >>> localizer = Flandmark()
    >>> keypoints = localizer.locate(lena_gray, y, x, height, width)
    >>> keypoints
-   [[...]]
+   array([[...]])
 
 You can use the package ``xbob.ip.draw`` to draw the rectangles and keypoints
 on the target image. A complete script would be something like:
