@@ -39,7 +39,7 @@ def opencv_detect(image):
   face.
   """
 
-  from cv2 import CascadeClassifier, cv
+  from cv2 import CascadeClassifier
 
   cc = CascadeClassifier(F('haarcascade_frontalface_alt.xml'))
   return cc.detectMultiScale(

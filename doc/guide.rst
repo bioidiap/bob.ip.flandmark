@@ -9,10 +9,6 @@
      from pkg_resources import resource_filename
      return resource_filename('xbob.ip.flandmark', join('data', f))
 
-   LENA = get_file('lena.jpg')
-   MULTI = get_file('multi.jpg')
-   CASCADE = get_file('haarcascade_frontalface_alt.xml')
-
 =============
  Users Guide
 =============
@@ -67,52 +63,33 @@ detector. OpenCV_, if compiled with Python support, provides an easy to use
 frontal face detector. The code below shall detect most frontal faces in a
 provided (gray-scaled) image:
 
-.. ifconfig:: not has_opencv
+.. doctest::
+   :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
 
-  .. warning::
-
-     OpenCV for the current installation in which this manual was generated was
-     not compiled with Python support. The code below cannot be tested and it
-     may work differently than what is announced. In doubt, consult the OpenCV
-     guide.
-
-  .. code-block:: python
-
-     >>> from cv2 import CascadeClassifier, cv
-     >>> from xbob.io import load
-     >>> from xbob.ip.color import rgb_to_gray
-     >>> cc = CascadeClassifier(CASCADE) # uses 'haarcascade_frontalface_alt.xml'
-     >>> lena_gray = rgb_to_gray(load(LENA) # uses 'lena.jpg'
-     >>> face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
-     >>> print face_bbxs
-     [[...]]
-
-.. ifconfig:: has_opencv
-
-  .. doctest::
-     :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
-
-     >>> from cv2 import CascadeClassifier, cv
-     >>> from xbob.io import load
-     >>> from xbob.ip.color import rgb_to_gray
-     >>> cc = CascadeClassifier(get_file('haarcascade_frontalface_alt.xml'))
-     >>> lena_gray = rgb_to_gray(load(get_file('lena.jpg')))
-     >>> face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
-     >>> print face_bbxs
-     [[...]]
+   >>> from xbob.io import load
+   >>> from xbob.ip.color import rgb_to_gray
+   >>> lena_gray = rgb_to_gray(load(get_file('lena.jpg')))
+   >>> try:
+   ...   from cv2 import CascadeClassifier
+   ...   cc = CascadeClassifier(get_file('haarcascade_frontalface_alt.xml'))
+   ...   face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
+   ... except ImportError: #if you don't have OpenCV, do it otherwise
+   ...   face_bbxs = [[214, 202, 183, 183]] #e.g., manually
+   >>> print(face_bbxs)
+   [[...]]
 
 The function ``detectMultiScale`` returns OpenCV_ rectangles as 2D
 :py:class:`numpy.ndarray`'s. Each row corresponds to a detected face at the
 input image. Notice the format of each bounding box differs from that of Bob_.
 Their format is ``(x, y, width, height)``.
 
-Once in possession of bounding boxes for the provided, gray-scaled image, you
+Once in possession of bounding boxes for the provided (gray-scaled) image, you
 can find the keypoints in the following way:
 
 .. doctest::
    :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
 
-   >>> x, y, width, height = [214, 202, 183, 183] #or from OpenCV
+   >>> x, y, width, height = face_bbxs[0]
    >>> from xbob.ip.flandmark import Flandmark
    >>> localizer = Flandmark()
    >>> keypoints = localizer.locate(lena_gray, y, x, height, width)

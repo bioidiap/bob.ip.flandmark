@@ -29,8 +29,8 @@ extensions = [
   'sphinx.ext.ifconfig',
   'sphinx.ext.autodoc',
   'sphinx.ext.autosummary',
-  'sphinx.ext.doctest',
   'sphinx.ext.intersphinx',
+  'sphinx.ext.doctest',
   'matplotlib.sphinxext.plot_directive',
   ]
 
@@ -280,13 +280,5 @@ intersphinx_mapping = {
   numpy_manual: None,
   }
 
-try:
-  import cv2
-  has_opencv = True
-  print("OpenCV python module is installed - running full doctest suite")
-except ImportError:
-  has_opencv = False
-  print("OpenCV python module is *NOT* installed - skipping parts")
-
 def setup(app):
-  app.add_config_value('has_opencv', has_opencv, 'html')
+  pass
