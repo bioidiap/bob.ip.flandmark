@@ -116,7 +116,6 @@ static void PyBobIpFlandmark_delete (PyBobIpFlandmarkObject* self) {
 }
 
 static void delete_image(IplImage* i) {
-  i->imageData = 0; ///< never delete blitz::Array data
   cvReleaseImage(&i);
 }
 
@@ -229,9 +228,12 @@ static PyObject* PyBobIpFlandmark_call_single(PyBobIpFlandmarkObject* self,
     return 0;
   }
 
-  //converts to OpenCV's IplImage
-  boost::shared_ptr<IplImage> cv_image(cvCreateImageHeader(cvSize(image->shape[1], image->shape[0]), IPL_DEPTH_8U, 1), std::ptr_fun(delete_image));
-  cv_image->imageData = reinterpret_cast<char*>(image->data);
+  // converts to OpenCV's IplImage
+  boost::shared_ptr<IplImage> cv_image(cvCreateImage(cvSize(image->shape[1], image->shape[0]), IPL_DEPTH_8U, 1), std::ptr_fun(delete_image));
+
+  // copy image data aligned (see http://chi3x10.wordpress.com/2008/05/07/be-aware-of-memory-alignment-of-iplimage-in-opencv)
+  for (int yy = 0; yy < image->shape[0]; ++yy)
+    std::copy(reinterpret_cast<char*>(image->data) + yy * image->shape[1], reinterpret_cast<char*>(image->data) + (yy+1) * image->shape[1], cv_image->imageData + yy * cv_image->widthStep);
 
   //prepares the bbx vector
   boost::shared_array<int> bbx(new int[4]);
