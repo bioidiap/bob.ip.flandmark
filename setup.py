@@ -7,14 +7,14 @@
 """
 
 from setuptools import setup, find_packages, dist
-dist.Distribution(dict(setup_requires=['xbob.blitz', 'xbob.io']))
+dist.Distribution(dict(setup_requires=['xbob.blitz', 'xbob.io.base']))
 from xbob.blitz.extension import Extension
-import xbob.io
+import xbob.io.base
 
 version = '2.0.0a0'
 packages = ['boost', 'opencv>=2.0', 'bob-io>=1.2.2']
 
-include_dirs = [xbob.io.get_include()]
+include_dirs = [xbob.io.base.get_include()]
 
 setup(
 
@@ -34,7 +34,8 @@ setup(
     install_requires=[
       'setuptools',
       'xbob.blitz',
-      'xbob.io', #for tests
+      'xbob.io.base',
+      'xbob.io.image', #for tests
       'xbob.ip.color', #for tests
       'xbob.ip.draw', #for doc generation
       'matplotlib', #for doc generation

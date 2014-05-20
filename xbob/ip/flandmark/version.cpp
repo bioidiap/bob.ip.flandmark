@@ -20,7 +20,7 @@
 #endif
 #include <xbob.blitz/capi.h>
 #include <xbob.blitz/cleanup.h>
-#include <xbob.io/config.h>
+#include <xbob.io.base/config.h>
 
 static int dict_set(PyObject* d, const char* key, const char* value) {
   PyObject* v = Py_BuildValue("s", value);
@@ -98,8 +98,8 @@ static PyObject* xbob_blitz_version() {
 /**
  * xbob.io c/c++ api version
  */
-static PyObject* xbob_io_version() {
-  return Py_BuildValue("{ss}", "api", BOOST_PP_STRINGIZE(XBOB_IO_API_VERSION));
+static PyObject* xbob_io_base_version() {
+  return Py_BuildValue("{ss}", "api", BOOST_PP_STRINGIZE(XBOB_IO_BASE_API_VERSION));
 }
 
 static PyObject* build_version_dictionary() {
@@ -115,7 +115,7 @@ static PyObject* build_version_dictionary() {
   if (!dict_steal(retval, "Python", python_version())) return 0;
   if (!dict_steal(retval, "NumPy", numpy_version())) return 0;
   if (!dict_steal(retval, "xbob.blitz", xbob_blitz_version())) return 0;
-  if (!dict_steal(retval, "xbob.io", xbob_io_version())) return 0;
+  if (!dict_steal(retval, "xbob.io", xbob_io_base_version())) return 0;
 
   Py_INCREF(retval);
   return retval;

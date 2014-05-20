@@ -7,7 +7,7 @@
 
 #include <xbob.blitz/cppapi.h>
 #include <xbob.blitz/cleanup.h>
-#include <xbob.io/api.h>
+#include <xbob.io.base/api.h>
 #include <structmember.h>
 
 #include <xbob.extension/documentation.h>
