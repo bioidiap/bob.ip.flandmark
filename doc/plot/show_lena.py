@@ -6,7 +6,8 @@ from xbob.ip.color import rgb_to_gray
 def get_data(f):
   from os.path import join
   from pkg_resources import resource_filename
-  from xbob.io import load
+  from xbob.io.base import load
+  import xbob.io.image
   return load(resource_filename('xbob.ip.flandmark', join('data', f)))
 
 lena = get_data('lena.jpg')
