@@ -67,6 +67,7 @@ provided (gray-scaled) image:
    :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
 
    >>> from xbob.io.base import load
+   >>> import xbob.io.image
    >>> from xbob.ip.color import rgb_to_gray
    >>> lena_gray = rgb_to_gray(load(get_file('lena.jpg')))
    >>> try:
