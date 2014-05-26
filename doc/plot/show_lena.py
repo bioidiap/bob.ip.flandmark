@@ -1,14 +1,14 @@
 from matplotlib import pyplot
-from xbob.ip.flandmark import Flandmark
-from xbob.ip.draw import box, cross
-from xbob.ip.color import rgb_to_gray
+from bob.ip.flandmark import Flandmark
+from bob.ip.draw import box, cross
+from bob.ip.color import rgb_to_gray
 
 def get_data(f):
   from os.path import join
   from pkg_resources import resource_filename
-  from xbob.io.base import load
-  import xbob.io.image
-  return load(resource_filename('xbob.ip.flandmark', join('data', f)))
+  from bob.io.base import load
+  import bob.io.image
+  return load(resource_filename('bob.ip.flandmark', join('data', f)))
 
 lena = get_data('lena.jpg')
 lena_gray = rgb_to_gray(lena)

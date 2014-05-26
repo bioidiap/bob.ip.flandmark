@@ -7,7 +7,7 @@
    def get_file(f):
      from os.path import join
      from pkg_resources import resource_filename
-     return resource_filename('xbob.ip.flandmark', join('data', f))
+     return resource_filename('bob.ip.flandmark', join('data', f))
 
 =============
  Users Guide
@@ -17,7 +17,7 @@ Flandmark detects 8 coordinates of important keypoints in **frontal** human
 faces. To properly work, the keypoint localizer requires the input of an image
 (of type ``uint8``, gray-scaled) and of a bounding box describing a rectangle
 where the face is supposed to be located in the image (see
-:py:class:`xbob.ip.flandmark.Flandmark.locate`).
+:py:class:`bob.ip.flandmark.Flandmark.locate`).
 
 The keypoints returned are, in this order:
 
@@ -66,9 +66,9 @@ provided (gray-scaled) image:
 .. doctest::
    :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
 
-   >>> from xbob.io.base import load
-   >>> import xbob.io.image
-   >>> from xbob.ip.color import rgb_to_gray
+   >>> from bob.io.base import load
+   >>> import bob.io.image
+   >>> from bob.ip.color import rgb_to_gray
    >>> lena_gray = rgb_to_gray(load(get_file('lena.jpg')))
    >>> try:
    ...   from cv2 import CascadeClassifier
@@ -91,13 +91,13 @@ can find the keypoints in the following way:
    :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
 
    >>> x, y, width, height = face_bbxs[0]
-   >>> from xbob.ip.flandmark import Flandmark
+   >>> from bob.ip.flandmark import Flandmark
    >>> localizer = Flandmark()
    >>> keypoints = localizer.locate(lena_gray, y, x, height, width)
    >>> keypoints
    array([[...]])
 
-You can use the package ``xbob.ip.draw`` to draw the rectangles and keypoints
+You can use the package ``bob.ip.draw`` to draw the rectangles and keypoints
 on the target image. A complete script would be something like:
 
 .. plot:: plot/show_lena.py

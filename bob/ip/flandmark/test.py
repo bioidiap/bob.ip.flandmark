@@ -11,9 +11,9 @@ import numpy
 import functools
 import pkg_resources
 import nose.tools
-import xbob.io.base
-import xbob.io.image
-import xbob.ip.color
+import bob.io.base
+import bob.io.image
+import bob.ip.color
 
 from . import Flandmark
 
@@ -120,8 +120,8 @@ def test_is_outside():
 @opencv_available
 def test_lena_opencv():
 
-  img = xbob.io.base.load(LENA)
-  gray = xbob.ip.color.rgb_to_gray(img)
+  img = bob.io.base.load(LENA)
+  gray = bob.ip.color.rgb_to_gray(img)
   (x, y, width, height) = opencv_detect(gray)[0]
 
   flm = Flandmark()
@@ -133,8 +133,8 @@ def test_lena_opencv():
 
 def test_lena():
 
-  img = xbob.io.base.load(LENA)
-  gray = xbob.ip.color.rgb_to_gray(img)
+  img = bob.io.base.load(LENA)
+  gray = bob.ip.color.rgb_to_gray(img)
   (x, y, width, height) = LENA_BBX[0]
 
   flm = Flandmark()
@@ -147,8 +147,8 @@ def test_lena():
 @opencv_available
 def test_multi_opencv():
 
-  img = xbob.io.base.load(MULTI)
-  gray = xbob.ip.color.rgb_to_gray(img)
+  img = bob.io.base.load(MULTI)
+  gray = bob.ip.color.rgb_to_gray(img)
   bbx = opencv_detect(gray)
 
   flm = Flandmark()
@@ -161,8 +161,8 @@ def test_multi_opencv():
 
 def test_multi():
 
-  img = xbob.io.base.load(MULTI)
-  gray = xbob.ip.color.rgb_to_gray(img)
+  img = bob.io.base.load(MULTI)
+  gray = bob.ip.color.rgb_to_gray(img)
 
   flm = Flandmark()
   for (x, y, width, height) in MULTI_BBX:

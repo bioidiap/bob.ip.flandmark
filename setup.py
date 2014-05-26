@@ -7,25 +7,25 @@
 """
 
 from setuptools import setup, find_packages, dist
-dist.Distribution(dict(setup_requires=['xbob.blitz', 'xbob.io.base']))
-from xbob.blitz.extension import Extension
-import xbob.io.base
+dist.Distribution(dict(setup_requires=['bob.blitz', 'bob.io.base']))
+from bob.blitz.extension import Extension
+import bob.io.base
 
 version = '2.0.0a0'
 packages = ['boost', 'opencv>=2.0', 'bob-io>=1.2.2']
 
-include_dirs = [xbob.io.base.get_include()]
+include_dirs = [bob.io.base.get_include()]
 
 setup(
 
-    name="xbob.ip.flandmark",
+    name="bob.ip.flandmark",
     version=version,
     description="Python bindings to the flandmark keypoint localization library",
     license="GPLv3",
     author='Andre Anjos',
     author_email='andre.anjos@idiap.ch',
     long_description=open('README.rst').read(),
-    url='https://github.com/bioidiap/xbob.ip.flandmark',
+    url='https://github.com/bioidiap/bob.ip.flandmark',
 
     packages=find_packages(),
     include_package_data=True,
@@ -33,34 +33,34 @@ setup(
 
     install_requires=[
       'setuptools',
-      'xbob.blitz',
-      'xbob.io.base',
-      'xbob.io.image', #for tests
-      'xbob.ip.color', #for tests
-      'xbob.ip.draw', #for doc generation
+      'bob.blitz',
+      'bob.io.base',
+      'bob.io.image', #for tests
+      'bob.ip.color', #for tests
+      'bob.ip.draw', #for doc generation
       'matplotlib', #for doc generation
     ],
 
     namespace_packages=[
-      "xbob",
-      "xbob.ip",
+      "bob",
+      "bob.ip",
       ],
 
     ext_modules=[
-      Extension("xbob.ip.flandmark.version",
+      Extension("bob.ip.flandmark.version",
         [
-          "xbob/ip/flandmark/version.cpp",
+          "bob/ip/flandmark/version.cpp",
           ],
         include_dirs = include_dirs,
         version = version,
         packages = packages,
         ),
-      Extension("xbob.ip.flandmark._library",
+      Extension("bob.ip.flandmark._library",
         [
-          "xbob/ip/flandmark/flandmark_detector.cpp",
-          "xbob/ip/flandmark/liblbp.cpp",
-          "xbob/ip/flandmark/flandmark.cpp",
-          "xbob/ip/flandmark/main.cpp",
+          "bob/ip/flandmark/flandmark_detector.cpp",
+          "bob/ip/flandmark/liblbp.cpp",
+          "bob/ip/flandmark/flandmark.cpp",
+          "bob/ip/flandmark/main.cpp",
           ],
         include_dirs = include_dirs,
         version = version,

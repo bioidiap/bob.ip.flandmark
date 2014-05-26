@@ -5,12 +5,12 @@
  * @brief Bob/Python extension to flandmark
  */
 
-#include <xbob.blitz/cppapi.h>
-#include <xbob.blitz/cleanup.h>
-#include <xbob.io.base/api.h>
+#include <bob.blitz/cppapi.h>
+#include <bob.blitz/cleanup.h>
+#include <bob.io.base/api.h>
 #include <structmember.h>
 
-#include <xbob.extension/documentation.h>
+#include <bob.extension/documentation.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/shared_array.hpp>
@@ -25,8 +25,8 @@
 
 #define CLASS_NAME "Flandmark"
 
-static auto s_class = xbob::extension::ClassDoc(
-    XBOB_EXT_MODULE_PREFIX "." CLASS_NAME,
+static auto s_class = bob::extension::ClassDoc(
+    BOB_EXT_MODULE_PREFIX "." CLASS_NAME,
 
     "A key-point localization for faces using Flandmark",
 
@@ -39,7 +39,7 @@ static auto s_class = xbob::extension::ClassDoc(
     "\n"
     )
     .add_constructor(
-        xbob::extension::FunctionDoc(
+        bob::extension::FunctionDoc(
           CLASS_NAME,
           "Constructor",
           "Initializes the key-point locator with a model."
@@ -170,7 +170,7 @@ static PyObject* call(PyBobIpFlandmarkObject* self,
 
 }
 
-static auto s_call = xbob::extension::FunctionDoc(
+static auto s_call = bob::extension::FunctionDoc(
     "locate",
     "Locates keypoints on a **single** facial bounding-box on the provided image."
     "This method will locate 8 keypoints inside the bounding-box defined "
@@ -271,7 +271,7 @@ PyObject* PyBobIpFlandmark_Repr(PyBobIpFlandmarkObject* self) {
   /**
    * Expected output:
    *
-   * <xbob.ip.flandmark(model='...')>
+   * <bob.ip.flandmark(model='...')>
    */
 
   PyObject* retval = PyUnicode_FromFormat("<%s(model='%s')>",

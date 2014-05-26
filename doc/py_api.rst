@@ -7,7 +7,7 @@
 ============
 
 This section includes information for using the pure Python API of
-``xbob.ip.flandmark``.
+``bob.ip.flandmark``.
 
-.. automodule:: xbob.ip.flandmark
+.. automodule:: bob.ip.flandmark
 

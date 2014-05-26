@@ -2,16 +2,16 @@
 .. Andre Anjos <andre.anjos@idiap.ch>
 .. Thu 17 Apr 16:59:12 2014 CEST
 
-.. image:: https://travis-ci.org/bioidiap/xbob.ip.flandmark.svg?branch=master
-   :target: https://travis-ci.org/bioidiap/xbob.ip.flandmark
-.. image:: https://coveralls.io/repos/bioidiap/xbob.ip.flandmark/badge.png
-   :target: https://coveralls.io/r/bioidiap/xbob.ip.flandmark
-.. image:: http://img.shields.io/github/tag/bioidiap/xbob.ip.flandmark.png
-   :target: https://github.com/bioidiap/xbob.ip.flandmark
-.. image:: http://img.shields.io/pypi/v/xbob.ip.flandmark.png
-   :target: https://pypi.python.org/pypi/xbob.ip.flandmark
-.. image:: http://img.shields.io/pypi/dm/xbob.ip.flandmark.png
-   :target: https://pypi.python.org/pypi/xbob.ip.flandmark
+.. image:: https://travis-ci.org/bioidiap/bob.ip.flandmark.svg?branch=master
+   :target: https://travis-ci.org/bioidiap/bob.ip.flandmark
+.. image:: https://coveralls.io/repos/bioidiap/bob.ip.flandmark/badge.png
+   :target: https://coveralls.io/r/bioidiap/bob.ip.flandmark
+.. image:: http://img.shields.io/github/tag/bioidiap/bob.ip.flandmark.png
+   :target: https://github.com/bioidiap/bob.ip.flandmark
+.. image:: http://img.shields.io/pypi/v/bob.ip.flandmark.png
+   :target: https://pypi.python.org/pypi/bob.ip.flandmark
+.. image:: http://img.shields.io/pypi/dm/bob.ip.flandmark.png
+   :target: https://pypi.python.org/pypi/bob.ip.flandmark
 
 ==============================
  Python Bindings to Flandmark
@@ -80,7 +80,7 @@ Testing
 
 You can run a set of tests using the nose test runner::
 
-  $ nosetests -sv xbob.ap
+  $ nosetests -sv bob.ap
 
 .. warning::
 
@@ -97,7 +97,7 @@ You can run our documentation tests using sphinx itself::
 
 You can test overall test coverage with::
 
-  $ nosetests --with-coverage --cover-package=xbob.ip.flandmark
+  $ nosetests --with-coverage --cover-package=bob.ip.flandmark
 
 The ``coverage`` egg must be installed for this to work properly.
 
