@@ -6,15 +6,16 @@
 """Bindings for flandmark
 """
 
+bob_packages = ['bob.core', 'bob.io.base']
+
 from setuptools import setup, find_packages, dist
-dist.Distribution(dict(setup_requires=['bob.blitz', 'bob.io.base']))
+dist.Distribution(dict(setup_requires=['bob.blitz'] + bob_packages))
 from bob.blitz.extension import Extension
-import bob.io.base
 
 version = '2.0.0a0'
-packages = ['boost', 'opencv>=2.0', 'bob-io>=1.2.2']
 
-include_dirs = [bob.io.base.get_include()]
+packages = ['boost', 'opencv>=2.0']
+boost_modules = ['system']
 
 setup(
 
@@ -34,6 +35,7 @@ setup(
     install_requires=[
       'setuptools',
       'bob.blitz',
+      'bob.core',
       'bob.io.base',
       'bob.io.image', #for tests
       'bob.ip.color', #for tests
@@ -44,30 +46,32 @@ setup(
     namespace_packages=[
       "bob",
       "bob.ip",
-      ],
+    ],
 
     ext_modules=[
       Extension("bob.ip.flandmark.version",
         [
           "bob/ip/flandmark/version.cpp",
-          ],
-        include_dirs = include_dirs,
+        ],
+        bob_packages = bob_packages,
         version = version,
         packages = packages,
-        ),
+        boost_modules = boost_modules,
+      ),
+
       Extension("bob.ip.flandmark._library",
         [
           "bob/ip/flandmark/flandmark_detector.cpp",
           "bob/ip/flandmark/liblbp.cpp",
           "bob/ip/flandmark/flandmark.cpp",
           "bob/ip/flandmark/main.cpp",
-          ],
-        include_dirs = include_dirs,
+        ],
+        bob_packages = bob_packages,
         version = version,
         packages = packages,
-        boost_modules = ['system'],
-        ),
-      ],
+        boost_modules = boost_modules,
+      ),
+    ],
 
     classifiers = [
       'Development Status :: 5 - Production/Stable',
