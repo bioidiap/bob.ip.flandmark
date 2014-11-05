@@ -4,6 +4,8 @@
 ..
 .. Copyright (C) 2011-2014 Idiap Research Institute, Martigny, Switzerland
 
+.. _bob.ip.flandmark:
+
 =======================================================================
  Python Bindings to the Flandmark Keypoint Localizer for Frontal Faces
 =======================================================================
@@ -12,12 +14,14 @@
 
 
 This package is a simple Python wrapper to the (rather quick) open-source
-facial landmark detector `Flandmark`_, **version 1.0.7** (or the github state
+facial landmark detector Flandmark_, **version 1.0.7** (or the github state
 as of 10/february/2013).  If you use this package, the author asks you to cite
-the following paper::
+the following paper:
+
+.. code-block:: latex
 
   @inproceedings{Uricar-Franc-Hlavac-VISAPP-2012,
-    author =      {U{\v{r}}i{\v{c}}{\'{a}}{\v{r}}, Michal and Franc, Vojt{\v{e}}ch and Hlav{\'{a}}{\v{c}}, V{\'{a}}clav},
+    author =      {U\v{r}i\v{c}\'a\v{r}, Michal and Franc, Vojt\v{e}ch and Hlav\'a\v{c}, V\'{a}clav},
     title =       {Detector of Facial Landmarks Learned by the Structured Output {SVM}},
     year =        {2012},
     pages =       {547-556},
@@ -40,10 +44,12 @@ the following paper::
   }
 
 You should also cite `Bob`_, as a core framework, in which these bindings are
-based on::
+based on:
+
+.. code-block:: latex
 
   @inproceedings{Anjos_ACMMM_2012,
-    author = {A. Anjos AND L. El Shafey AND R. Wallace AND M. G\"unther AND C. McCool AND S. Marcel},
+    author = {Anjos, Andr\'e AND El Shafey, Laurent AND Wallace, Roy AND G\"unther, Manuel AND McCool, Christopher AND Marcel, S\'ebastien},
     title = {Bob: a free signal processing and machine learning toolbox for researchers},
     year = {2012},
     month = oct,
