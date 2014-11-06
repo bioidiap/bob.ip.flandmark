@@ -15,7 +15,8 @@ from bob.blitz.extension import Extension, build_ext
 from bob.extension.utils import load_requirements
 build_requires = load_requirements()
 
-version = '2.0.0a0'
+# Define package version
+version = open("version.txt").read().rstrip()
 
 packages = ['boost', 'opencv>=2.0']
 boost_modules = ['system']
