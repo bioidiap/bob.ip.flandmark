@@ -18,8 +18,17 @@ build_requires = load_requirements()
 # Define package version
 version = open("version.txt").read().rstrip()
 
-packages = ['boost', 'opencv>=2.0']
+packages = ['boost']
 boost_modules = ['system']
+
+# check if opencv is available
+try:
+  from bob.extension import check_packages
+  pkg = check_packages(['opencv>=2.0'])
+  print("Found OpenCV libraries %s" % pkg[0].libraries())
+  packages.append('opencv>=2.0')
+except RuntimeError as e:
+  print("OpenCV was not found, it will not be availabe during tests")
 
 setup(
 
