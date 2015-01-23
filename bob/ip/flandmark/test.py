@@ -68,7 +68,7 @@ def pnpoly(point, vertices):
   return c
 
 def is_inside(point, box, eps=1e-5):
-  """Calculates, using matplotlib, if a point lies inside a bounding box"""
+  """Calculates if a point lies inside a bounding box"""
 
   (y, x, height, width) = box
   #note: vertices must be organized clockwise
