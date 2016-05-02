@@ -12,13 +12,14 @@
 #define __FLANDMARK_DETECTOR_H_
 
 #include <stdint.h>
-#include <cv.h>
-#include <cvaux.h>
+#include <blitz/array.h>
 
 // index row-order matrices
 #define INDEX(ROW, COL, NUM_ROWS) ((COL)*(NUM_ROWS)+(ROW))
 #define ROW(IDX, ROWS) (((IDX)-1) % (ROWS))
 #define COL(IDX, ROWS) (((IDX)-1) / (ROWS))
+
+namespace bob { namespace ip { namespace flandmark {
 
 typedef struct psig_struct {
     int * disp;
@@ -52,8 +53,6 @@ typedef struct model_struct {
     int W_ROWS, W_COLS;
     FLANDMARK_Data data;
     uint8_t *normalizedImageFrame;
-    double *bb;
-    float *sf;
 } FLANDMARK_Model;
 
 typedef struct psi_struct {
@@ -156,13 +155,13 @@ void flandmark_maximize_gdotprod(double *maximum, double *idx, const double *fir
  *
  *
  */
-int flandmark_get_normalized_image_frame(IplImage *input, const int bbox[], double *bb, uint8_t *face_img, FLANDMARK_Model *model);
+void flandmark_get_normalized_image_frame(const blitz::Array<uint8_t,2>& input, const int bbox[], int *bb, uint8_t *face_img, FLANDMARK_Model *model);
 
 /**
  * Function imcrop
  *
  */
-int flandmark_imcrop(IplImage *input, IplImage *output, const CvRect region);
+void flandmark_imcrop(const blitz::Array<uint8_t,2>& input, blitz::Array<double,2>& output, const int* bbx);
 
 /**
  * Function argmax
@@ -180,7 +179,7 @@ void flandmark_argmax(double *smax, FLANDMARK_Options *options, const int *mapTa
  * \param[in, out] int array representing 2D array of size [2 x options.M] with estimated positions of landmarks
  * \return int indicator of success or fail of the detection
  */
-int flandmark_detect_base(uint8_t *face_image, FLANDMARK_Model *model, double *landmarks);
+void flandmark_detect_base(uint8_t *face_image, FLANDMARK_Model *model, double *landmarks);
 
 /**
  * Function flandmark_detect
@@ -188,6 +187,8 @@ int flandmark_detect_base(uint8_t *face_image, FLANDMARK_Model *model, double *l
  * Estimates positions of facial landmarks given the image and the bounding box of the detected face
  *
  */
-int flandmark_detect(IplImage *img, int * bbox, FLANDMARK_Model *model, double *landmarks, int * bw_margin = 0);
+void flandmark_detect(const blitz::Array<uint8_t,2>& img, int * bbox, FLANDMARK_Model *model, double *landmarks, int * bw_margin = 0);
+
+} } } // namespace bob ip flandmark
 
 #endif // __LIBFLD_DETECTOR_H_

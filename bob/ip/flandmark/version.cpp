@@ -12,8 +12,6 @@
 #include <bob.core/config.h>
 #include <bob.io.base/config.h>
 
-#include <cv.h>
-
 
 static PyObject* build_version_dictionary() {
 
@@ -21,7 +19,6 @@ static PyObject* build_version_dictionary() {
   if (!retval) return 0;
   auto retval_ = make_safe(retval);
 
-  if (!dict_steal(retval, "OpenCV", Py_BuildValue("s", CV_VERSION))) return 0;
   if (!dict_steal(retval, "Blitz++", blitz_version())) return 0;
   if (!dict_steal(retval, "Boost", boost_version())) return 0;
   if (!dict_steal(retval, "Compiler", compiler_version())) return 0;
