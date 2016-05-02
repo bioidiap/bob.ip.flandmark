@@ -11,6 +11,8 @@
 #include <bob.blitz/cleanup.h>
 #include <bob.core/config.h>
 #include <bob.io.base/config.h>
+#include <bob.sp/config.h>
+#include <bob.ip.base/config.h>
 
 
 static PyObject* build_version_dictionary() {
@@ -28,6 +30,8 @@ static PyObject* build_version_dictionary() {
   if (!dict_steal(retval, "bob.blitz", bob_blitz_version())) return 0;
   if (!dict_steal(retval, "bob.core", bob_core_version())) return 0;
   if (!dict_steal(retval, "bob.io.base", bob_io_base_version())) return 0;
+  if (!dict_steal(retval, "bob.sp", bob_sp_version())) return 0;
+  if (!dict_steal(retval, "bob.ip.base", bob_ip_base_version())) return 0;
 
   return Py_BuildValue("O", retval);
 }
