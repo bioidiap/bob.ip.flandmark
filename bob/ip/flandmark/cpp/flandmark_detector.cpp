@@ -924,9 +924,9 @@ void flandmark_imcrop(const blitz::Array<uint8_t, 2>& input, blitz::Array<uint8_
   if (bbx[0] < 0 or bbx[2] >= input.extent(0) or bbx[1] < 0 or bbx[3] >= input.extent(1))
     throw std::runtime_error("Bounding box exceeds image resolution");
 
-  output.resize(bbx[2]-bbx[0]+1, bbx[3]-bbx[1]+1);
+  output.resize(bbx[2]-bbx[0], bbx[3]-bbx[1]);
   blitz::Range a = blitz::Range::all();
-  output(a,a) = input(blitz::Range(bbx[0], bbx[2]), blitz::Range(bbx[1], bbx[3]));
+  output(a,a) = input(blitz::Range(bbx[0], bbx[2]-1), blitz::Range(bbx[1], bbx[3]-1));
 }
 
 void flandmark_get_normalized_image_frame(const blitz::Array<uint8_t, 2>& input, const int bbox[], int *corrected_bbx, uint8_t *face_img, FLANDMARK_Model *model)
@@ -954,11 +954,12 @@ void flandmark_get_normalized_image_frame(const blitz::Array<uint8_t, 2>& input,
   bob::ip::base::scale(croppedImage, scaledImage);
 
   // tranform blitz array to simple 1D uint8 array representing 2D uint8 normalized image frame
-  for (int x = 0; x < model->data.options.bw[0]; ++x){
-    for (int y = 0; y < model->data.options.bw[1]; ++y){
-       face_img[INDEX(x, y, model->data.options.bw[1])] = (uint8_t)round(scaledImage(y,x));
+  for (int y = 0; y < model->data.options.bw[1]; ++y){
+    for (int x = 0; x < model->data.options.bw[0]; ++x){
+       face_img[INDEX(y, x, model->data.options.bw[1])] = (uint8_t)round(scaledImage(y,x));
     }
   }
+
 }
 
 } } } // namespace bob ip flandmark
