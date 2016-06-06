@@ -942,8 +942,8 @@ void flandmark_get_normalized_image_frame(const blitz::Array<uint8_t, 2>& input,
   nd[0] = d[0]*model->data.options.bw_margin[1]/100. + d[0];
   nd[1] = d[1]*model->data.options.bw_margin[0]/100. + d[1];
 
-  corrected_bbx[0] = int(c[0] - nd[0]/2.);
-  corrected_bbx[1] = int(c[1] - nd[1]/2.);
+  corrected_bbx[0] = int(c[0] - nd[0]/2.) + 2;
+  corrected_bbx[1] = int(c[1] - nd[1]/2.) + 2;
   corrected_bbx[2] = int(c[0] + nd[0]/2.);
   corrected_bbx[3] = int(c[1] + nd[1]/2.);
 
