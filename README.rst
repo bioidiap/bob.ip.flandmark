@@ -6,9 +6,9 @@
    :target: http://pythonhosted.org/bob.ip.flandmark/index.html
 .. image:: http://img.shields.io/badge/docs-latest-orange.png
    :target: https://www.idiap.ch/software/bob/docs/latest/bioidiap/bob.ip.flandmark/master/index.html
-.. image:: https://travis-ci.org/bioidiap/bob.ip.flandmark.svg?branch=master
+.. image:: https://travis-ci.org/bioidiap/bob.ip.flandmark.svg?branch=v2.1.0
    :target: https://travis-ci.org/bioidiap/bob.ip.flandmark
-.. image:: https://coveralls.io/repos/bioidiap/bob.ip.flandmark/badge.svg?branch=master
+.. image:: https://coveralls.io/repos/bioidiap/bob.ip.flandmark/badge.svg?branch=v2.1.0
    :target: https://coveralls.io/r/bioidiap/bob.ip.flandmark
 .. image:: https://img.shields.io/badge/github-master-0000c0.png
    :target: https://github.com/bioidiap/bob.ip.flandmark/tree/master
