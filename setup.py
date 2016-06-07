@@ -6,7 +6,7 @@
 """Bindings for flandmark
 """
 
-bob_packages = ['bob.core', 'bob.io.base']
+bob_packages = ['bob.core', 'bob.io.base', 'bob.sp', 'bob.ip.base']
 
 from setuptools import setup, find_packages, dist
 dist.Distribution(dict(setup_requires=['bob.extension', 'bob.blitz'] + bob_packages))
@@ -18,7 +18,7 @@ build_requires = load_requirements()
 # Define package version
 version = open("version.txt").read().rstrip()
 
-packages = ['boost', "opencv>=2.0"]
+packages = ['boost']
 boost_modules = ['system']
 
 setup(
@@ -39,8 +39,6 @@ setup(
     setup_requires = build_requires,
     install_requires = build_requires,
 
-
-
     ext_modules=[
       Extension("bob.ip.flandmark.version",
         [
@@ -54,8 +52,8 @@ setup(
 
       Extension("bob.ip.flandmark._library",
         [
-          "bob/ip/flandmark/flandmark_detector.cpp",
-          "bob/ip/flandmark/liblbp.cpp",
+          "bob/ip/flandmark/cpp/flandmark_detector.cpp",
+          "bob/ip/flandmark/cpp/liblbp.cpp",
           "bob/ip/flandmark/flandmark.cpp",
           "bob/ip/flandmark/main.cpp",
         ],

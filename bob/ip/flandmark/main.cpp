@@ -15,24 +15,24 @@
 #include <bob.extension/documentation.h>
 
 extern PyTypeObject PyBobIpFlandmark_Type;
+extern bool init_PyBobIpFlandmark(PyObject*);
 
 static auto s_setter = bob::extension::FunctionDoc(
-    "__set_default_model__",
-    "Internal function to set the default model for the Flandmark class"
-    )
-    .add_prototype("path", "")
-    .add_parameter("path", "str", "The path to the new model file")
-    ;
+  "_set_default_model",
+  "Internal function to set the default model for the Flandmark class"
+)
+.add_prototype("path", "")
+.add_parameter("path", "str", "The path to the new model file")
+;
 
 PyObject* set_flandmark_model(PyObject*, PyObject* o) {
-
-  int ok = PyDict_SetItemString(PyBobIpFlandmark_Type.tp_dict,
-      "__default_model__", o);
+BOB_TRY
+  int ok = PyDict_SetItemString(PyBobIpFlandmark_Type.tp_dict, "_default_model", o);
 
   if (ok == -1) return 0;
 
   Py_RETURN_NONE;
-
+BOB_CATCH_FUNCTION("_set_default_model", 0)
 }
 
 static PyMethodDef module_methods[] = {
@@ -60,12 +60,6 @@ static PyModuleDef module_definition = {
 
 static PyObject* create_module (void) {
 
-  //makes sure that PyBobIpFlandmark_Type has a dictionary on tp_dict
-  PyBobIpFlandmark_Type.tp_dict = PyDict_New();
-  if (!PyBobIpFlandmark_Type.tp_dict) return 0;
-
-  PyBobIpFlandmark_Type.tp_new = PyType_GenericNew;
-  if (PyType_Ready(&PyBobIpFlandmark_Type) < 0) return 0;
 
 # if PY_VERSION_HEX >= 0x03000000
   PyObject* module = PyModule_Create(&module_definition);
@@ -77,9 +71,7 @@ static PyObject* create_module (void) {
 # endif
   if (!module) return 0;
 
-  /* register the types to python */
-  Py_INCREF(&PyBobIpFlandmark_Type);
-  if (PyModule_AddObject(module, "Flandmark", (PyObject *)&PyBobIpFlandmark_Type) < 0) return 0;
+  if (!init_PyBobIpFlandmark(module)) return 0;
 
   /* imports dependencies */
   if (import_bob_blitz() < 0) return 0;

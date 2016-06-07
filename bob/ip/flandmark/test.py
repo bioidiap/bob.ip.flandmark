@@ -33,23 +33,6 @@ MULTI_BBX = [
     [253, 42, 28, 28],
     ] #from OpenCV's cascade detector
 
-def opencv_detect(image):
-  """Detects a face using OpenCV's cascade detector
-
-  Returns a list of arrays containing (x, y, width, height) for each detected
-  face.
-  """
-
-  from cv2 import CascadeClassifier
-
-  cc = CascadeClassifier(F('haarcascade_frontalface_alt.xml'))
-  return cc.detectMultiScale(
-      image,
-      1.3, #scaleFactor (at each time the image is re-scaled)
-      4, #minNeighbors (around candidate to be retained)
-      0, #flags (normally, should be set to zero)
-      (20,20), #(minSize, maxSize) (of detected objects on that scale)
-      )
 
 def pnpoly(point, vertices):
   """Python translation of the C algorithm taken from:
@@ -80,19 +63,6 @@ def is_inside(point, box, eps=1e-5):
     ], dtype=float)
   return pnpoly((point[1], point[0]), vertices)
 
-def opencv_available(test):
-  """Decorator for detecting if OpenCV/Python bindings are available"""
-  from nose.plugins.skip import SkipTest
-
-  @functools.wraps(test)
-  def wrapper(*args, **kwargs):
-    try:
-      import cv2
-      return test(*args, **kwargs)
-    except ImportError:
-      raise SkipTest("The cv2 module is not available")
-
-  return wrapper
 
 def test_is_inside():
 
@@ -117,19 +87,6 @@ def test_is_outside():
   assert not is_inside((1.5, 1.5), box, eps=1e-10)
   assert not is_inside((-0.5, -0.5), box, eps=1e-10)
 
-@opencv_available
-def test_lena_opencv():
-
-  img = bob.io.base.load(LENA)
-  gray = bob.ip.color.rgb_to_gray(img)
-  (x, y, width, height) = opencv_detect(gray)[0]
-
-  flm = Flandmark()
-  keypoints = flm.locate(gray, y, x, height, width)
-  nose.tools.eq_(keypoints.shape, (8, 2))
-  nose.tools.eq_(keypoints.dtype, 'float64')
-  for k in keypoints:
-    assert is_inside(k, (y, x, height, width), eps=1)
 
 def test_lena():
 
@@ -143,21 +100,6 @@ def test_lena():
   nose.tools.eq_(keypoints.dtype, 'float64')
   for k in keypoints:
     assert is_inside(k, (y, x, height, width), eps=1)
-
-@opencv_available
-def test_multi_opencv():
-
-  img = bob.io.base.load(MULTI)
-  gray = bob.ip.color.rgb_to_gray(img)
-  bbx = opencv_detect(gray)
-
-  flm = Flandmark()
-  for (x, y, width, height) in bbx:
-    keypoints = flm.locate(gray, y, x, height, width)
-    nose.tools.eq_(keypoints.shape, (8, 2))
-    nose.tools.eq_(keypoints.dtype, 'float64')
-    for k in keypoints:
-      assert is_inside(k, (y, x, height, width), eps=1)
 
 def test_multi():
 
