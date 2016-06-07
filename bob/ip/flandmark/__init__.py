@@ -1,4 +1,6 @@
 # import Libraries of other lib packages
+import bob.sp
+import bob.ip.base
 import bob.io.base
 
 from ._library import *
