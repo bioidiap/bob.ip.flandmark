@@ -25,12 +25,12 @@ setup(
 
     name="bob.ip.flandmark",
     version=version,
-    description="Python bindings to the flandmark keypoint localization library",
-    license="GPLv3",
+    description="Flandmark keypoint localization library",
+    license="BSD",
     author='Andre Anjos',
     author_email='andre.anjos@idiap.ch',
     long_description=open('README.rst').read(),
-    url='https://github.com/bioidiap/bob.ip.flandmark',
+    url='https://gitlab.idiap.ch/bob/bob.ip.flandmark',
 
     packages=find_packages(),
     include_package_data=True,
