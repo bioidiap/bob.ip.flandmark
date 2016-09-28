@@ -13,7 +13,7 @@
  Users Guide
 =============
 
-:py:class:`bob.ip.base.Flandmark` detects 8 coordinates of important keypoints in **frontal** human faces.
+:py:class:`bob.ip.flandmark` detects 8 coordinates of important keypoints in **frontal** human faces.
 To properly work, the keypoint localizer requires the input of an image (of type ``uint8``, gray-scaled) and of a bounding box describing a rectangle where the face is supposed to be located in the image (see :py:meth:`bob.ip.flandmark.Flandmark.locate`).
 
 The keypoints returned are, in this order:
