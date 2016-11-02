@@ -122,8 +122,8 @@ static auto s_locate = bob::extension::FunctionDoc(
 )
 .add_prototype("image, y, x, height, width", "landmarks")
 .add_parameter("image", "array-like (2D, uint8)", "The image Flandmark will operate on")
-.add_parameter("y, x", "int", "The top left-most corner of the bounding box containing the face image you want to locate keypoints on.")
-.add_parameter("height, width", "int", "The dimensions accross ``y`` (height) and ``x`` (width) for the bounding box, in number of pixels.")
+.add_parameter("y, x", "int", "The top left-most corner of the bounding box containing the face image you want to locate keypoints on, defaults to 0.")
+.add_parameter("height, width", "int", "The dimensions accross ``y`` (height) and ``x`` (width) for the bounding box, in number of pixels; defaults to full image resolution.")
 .add_return("landmarks", "array (2D, float64)", "Each row in the output array contains the locations of keypoints in the format ``(y, x)``")
 ;
 
@@ -132,13 +132,10 @@ BOB_TRY
   char** kwlist = s_locate.kwlist();
 
   PyBlitzArrayObject* image;
-  int bbx[4];
+  int bbx[] = {0,0,-1,-1};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O&iiii", kwlist,  &PyBlitzArray_Converter, &image, &bbx[0], &bbx[1], &bbx[2], &bbx[3])) return 0;
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "O&|iiii", kwlist,  &PyBlitzArray_Converter, &image, &bbx[0], &bbx[1], &bbx[2], &bbx[3])) return 0;
 
-  // create bounding box in format (top, left, bottom, right)
-  bbx[2] += bbx[0] - 1;
-  bbx[3] += bbx[1] - 1;
 
   auto image_ = make_safe(image);
 
@@ -148,9 +145,19 @@ BOB_TRY
     return 0;
   }
 
+  auto cxx_image = PyBlitzArrayCxx_AsBlitz<uint8_t, 2>(image);
+  // create bounding box in format (top, left, bottom, right)
+  if (bbx[2] < 0)
+    bbx[2] = cxx_image->extent(0);
+  if (bbx[3] < 0)
+    bbx[3] = cxx_image->extent(1);
+
+  bbx[2] += bbx[0] - 1;
+  bbx[3] += bbx[1] - 1;
+
   // detect
   std::vector<double> detected(2*self->flandmark->data.options.M);
-  bob::ip::flandmark::flandmark_detect(*PyBlitzArrayCxx_AsBlitz<uint8_t, 2>(image), bbx, self->flandmark, &detected[0]);
+  bob::ip::flandmark::flandmark_detect(*cxx_image, bbx, self->flandmark, &detected[0]);
 
   // extract landmarks
   blitz::Array<double, 2> landmarks(self->flandmark->data.options.M, 2);
