@@ -101,6 +101,18 @@ def test_lena():
   for k in keypoints:
     assert is_inside(k, (y, x, height, width), eps=1)
 
+def test_full_image():
+
+  img = bob.io.base.load(LENA)
+  gray = bob.ip.color.rgb_to_gray(img)
+
+  flm = Flandmark()
+  lm1 = flm.locate(gray, 0, 0, gray.shape[0], gray.shape[1])
+  lm2 = flm.locate(gray)
+  assert all(numpy.allclose(lm1[i],lm2[i]) for i in range(len(lm1)))
+
+
+
 def test_multi():
 
   img = bob.io.base.load(MULTI)

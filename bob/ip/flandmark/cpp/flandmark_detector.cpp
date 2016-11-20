@@ -921,7 +921,7 @@ void flandmark_maximize_gdotprod(double * maximum, double * idx, const double * 
 
 void flandmark_imcrop(const blitz::Array<uint8_t, 2>& input, blitz::Array<uint8_t,2>& output, int* bbx)
 {
-  if (bbx[0] < 0 or bbx[2] >= input.extent(0) or bbx[1] < 0 or bbx[3] >= input.extent(1))
+  if (bbx[0] < 0 or bbx[2] > input.extent(0) or bbx[1] < 0 or bbx[3] > input.extent(1))
     throw std::runtime_error("Bounding box exceeds image resolution");
 
   output.resize(bbx[2]-bbx[0], bbx[3]-bbx[1]);
@@ -946,6 +946,12 @@ void flandmark_get_normalized_image_frame(const blitz::Array<uint8_t, 2>& input,
   corrected_bbx[1] = int(c[1] - nd[1]/2.) + 2;
   corrected_bbx[2] = int(c[0] + nd[0]/2.);
   corrected_bbx[3] = int(c[1] + nd[1]/2.);
+
+  // if extended bbx is larger than the image, reduce it
+  corrected_bbx[0] = std::max(corrected_bbx[0], 0);
+  corrected_bbx[1] = std::max(corrected_bbx[1], 0);
+  corrected_bbx[2] = std::min(corrected_bbx[2], bbox[2]);
+  corrected_bbx[3] = std::min(corrected_bbx[3], bbox[3]);
 
   blitz::Array<uint8_t, 2> croppedImage;
   blitz::Array<double, 2> scaledImage(model->data.options.bw[1], model->data.options.bw[0]);
