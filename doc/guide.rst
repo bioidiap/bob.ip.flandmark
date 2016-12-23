@@ -64,9 +64,11 @@ The code below shall detect most frontal faces in a provided (gray-scaled) image
    >>> import bob.ip.color
    >>> lena_gray = bob.ip.color.rgb_to_gray(bob.io.base.load(get_file('lena.jpg')))
    >>> try:
-   ...   from cv2 import CascadeClassifier
-   ...   cc = CascadeClassifier(get_file('haarcascade_frontalface_alt.xml'))
-   ...   face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
+   ...   # the following lines depend on opencv API, hence commented out.
+   ...   # from cv2 import CascadeClassifier
+   ...   # cc = CascadeClassifier(get_file('haarcascade_frontalface_alt.xml'))
+   ...   # face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
+   ...   face_bbxs = [[214, 202, 183, 183]] #e.g., manually
    ... except ImportError: #if you don't have OpenCV, do it otherwise
    ...   face_bbxs = [[214, 202, 183, 183]] #e.g., manually
    >>> print(face_bbxs)
