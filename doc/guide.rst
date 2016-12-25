@@ -66,7 +66,7 @@ The code below shall detect most frontal faces in a provided image:
    >>> bounding_box, quality = bob.ip.facedetect.detect_single_face(lena)
    >>> y, x = bounding_box.topleft
    >>> height, width = bounding_box.size
-   >>> print(y, x, height, width)
+   >>> print((y, x, height, width))
    (...)
 
 .. note::
