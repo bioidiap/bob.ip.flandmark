@@ -24,14 +24,14 @@ def F(f):
 LENA = F('lena.jpg')
 LENA_BBX = [
     [214, 202, 183, 183]
-    ] #from OpenCV's cascade detector
+    ]
 
 MULTI = F('multi.jpg')
 MULTI_BBX = [
     [326, 20, 31, 31],
     [163, 25, 34, 34],
     [253, 42, 28, 28],
-    ] #from OpenCV's cascade detector
+    ]
 
 
 def pnpoly(point, vertices):

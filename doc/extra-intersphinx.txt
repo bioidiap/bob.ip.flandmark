@@ -1,0 +1,4 @@
+bob.ip.draw
+bob.io.image
+bob.ip.facedetect
+matplotlib

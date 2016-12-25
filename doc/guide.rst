@@ -53,43 +53,34 @@ The input bounding box describes the rectangle coordinates using 4 values: ``(y,
 Square bounding boxes, i.e. when ``height == width``, will give best results.
 
 If you don't know the bounding box coordinates of faces on the provided image, you will need to either manually annotate them or use an automatic face detector.
-OpenCV_, if compiled with Python support, provides an easy to use frontal face detector.
-The code below shall detect most frontal faces in a provided (gray-scaled) image:
+:ref:`bob.ip.facedetect` provides an easy to use frontal face detector.
+The code below shall detect most frontal faces in a provided image:
 
 .. doctest::
    :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
 
    >>> import bob.io.base
    >>> import bob.io.image
-   >>> import bob.ip.color
-   >>> lena_gray = bob.ip.color.rgb_to_gray(bob.io.base.load(get_file('lena.jpg')))
-   >>> try:
-   ...   # the following lines depend on opencv API, hence commented out.
-   ...   # from cv2 import CascadeClassifier
-   ...   # cc = CascadeClassifier(get_file('haarcascade_frontalface_alt.xml'))
-   ...   # face_bbxs = cc.detectMultiScale(lena_gray, 1.3, 4, 0, (20, 20))
-   ...   face_bbxs = [[214, 202, 183, 183]] #e.g., manually
-   ... except ImportError: #if you don't have OpenCV, do it otherwise
-   ...   face_bbxs = [[214, 202, 183, 183]] #e.g., manually
-   >>> print(face_bbxs)
-   [[...]]
+   >>> import bob.ip.facedetect
+   >>> lena = bob.io.base.load(get_file('lena.jpg'))
+   >>> bounding_box, quality = bob.ip.facedetect.detect_single_face(lena)
+   >>> y, x = bounding_box.topleft
+   >>> height, width = bounding_box.size
+   >>> print(y, x, height, width)
+   (...)
 
 .. note::
    To enable the :py:func:`bob.io.base.load` function to load images, :ref:`bob.io.image <bob.io.image>` must be imported, see :ref:`bob.io.image`.
-
-The function ``detectMultiScale`` returns OpenCV_ rectangles as 2D :py:class:`numpy.ndarray`\s.
-Each row corresponds to a detected face at the input image.
-Notice the format of each bounding box differs from that of Bob_.
-Their format is ``(x, y, width, height)``.
 
 Once in possession of bounding boxes for the provided (gray-scaled) image, you can find the keypoints in the following way:
 
 .. doctest::
    :options: +NORMALIZE_WHITESPACE, +ELLIPSIS
 
-   >>> x, y, width, height = face_bbxs[0]
+   >>> import bob.ip.color
    >>> from bob.ip.flandmark import Flandmark
    >>> localizer = Flandmark()
+   >>> lena_gray = bob.ip.color.rgb_to_gray(lena)
    >>> keypoints = localizer.locate(lena_gray, y, x, height, width)
    >>> keypoints
    array([[...]])

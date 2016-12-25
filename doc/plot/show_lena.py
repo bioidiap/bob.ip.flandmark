@@ -12,7 +12,7 @@ def get_data(f):
 
 lena = get_data('lena.jpg')
 lena_gray = rgb_to_gray(lena)
-x, y, width, height = [214, 202, 183, 183] #or from OpenCV
+x, y, width, height = [214, 202, 183, 183] #or from bob.ip.facedetect
 localizer = Flandmark()
 keypoints = localizer.locate(lena_gray, y, x, height, width)
 
