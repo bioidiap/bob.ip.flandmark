@@ -9,9 +9,9 @@
      from pkg_resources import resource_filename
      return resource_filename('bob.ip.flandmark', join('data', f))
 
-=============
- Users Guide
-=============
+==============================================
+ Face Landmark Detection Using Python and Bob
+==============================================
 
 :py:class:`bob.ip.flandmark` detects 8 coordinates of important keypoints in **frontal** human faces.
 To properly work, the keypoint localizer requires the input of an image (of type ``uint8``, gray-scaled) and of a bounding box describing a rectangle where the face is supposed to be located in the image (see :py:meth:`bob.ip.flandmark.Flandmark.locate`).
@@ -64,8 +64,11 @@ The code below shall detect most frontal faces in a provided image:
    >>> import bob.ip.facedetect
    >>> lena = bob.io.base.load(get_file('lena.jpg'))
    >>> bounding_box, quality = bob.ip.facedetect.detect_single_face(lena)
+   >>> # scale the bounding box to cover more of the face
+   >>> bounding_box = bounding_box.scale(1.2, True)
    >>> y, x = bounding_box.topleft
    >>> height, width = bounding_box.size
+   >>> width = height  # make it square
    >>> print((y, x, height, width))
    (...)
 
