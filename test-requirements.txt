@@ -1,0 +1,3 @@
+bob.io.image
+bob.ip.color
+bob.ip.facedetect

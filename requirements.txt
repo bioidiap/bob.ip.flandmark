@@ -6,11 +6,3 @@ bob.io.base
 bob.math
 bob.sp
 bob.ip.base
-
-# For tests
-bob.io.image
-bob.ip.color
-
-# For documentation generation
-bob.ip.draw
-matplotlib
